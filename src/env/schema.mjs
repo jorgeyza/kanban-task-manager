@@ -7,7 +7,7 @@ import { z } from 'zod';
  */
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
-  PORT: z.number().int(),
+  PORT: z.string(),
   NODE_ENV: z.enum(['development', 'test', 'production'])
 });
 
