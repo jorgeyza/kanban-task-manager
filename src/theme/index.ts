@@ -1,6 +1,7 @@
-import { theme as base, extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
 import { globalStyles as styles } from './styles';
+import components from './components';
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
@@ -8,30 +9,31 @@ const config: ThemeConfig = {
 };
 
 const colors = {
-  black: 'hsla(237, 100%, 4%, 1)',
-  gray: 'hsla(216, 15%, 57%, 1)',
-  white: 'hsla(0, 0%, 100%, 1)',
-  whiteSoft: 'hsla(214, 100%, 97%, 1)',
-  lightGray: 'hsla(221, 69%, 94%, 1)',
-  lightGrayAlpha25: 'hsla(221, 69%, 94%, 0.25)',
-  lighterGray: 'hsla(220, 69%, 97%, 1)',
-  darkGray: 'hsla(236, 11%, 27%, 1)',
-  darkerGray: 'hsla(235, 12%, 19%, 1)',
-  purple: 'hsla(242, 48%, 58%, 1)',
-  purpleAlpha25: 'hsla(242, 48%, 58%, 0.25)',
-  lightPurple: 'hsla(243, 100%, 82%, 1)',
-  red: 'hsla(0, 78%, 63%, 1)',
-  lightRed: 'hsla(0, 100%, 80%, 1)',
-  lightBlack: 'hsla(235, 16%, 15%, 1)'
+  black: '#000112',
+  gray: '#828FA3',
+  white: '#FFFFFF',
+  whiteSoft: '#eff6ff',
+  lightGray: '#E4EBFA',
+  lightGrayAlpha25: 'rgba(130, 143, 163, .25)',
+  lighterGray: '#F4F7FD',
+  darkGray: '#3E3F4E',
+  darkerGray: '#2B2C37',
+  purple: '#635FC7',
+  purpleAlpha25: 'rgba(99, 95, 199, .25)',
+  lightPurple: '#A8A4FF',
+  red: '#EA5555',
+  lightRed: '#FF9898',
+  lightBlack: '#20212C'
 };
 
 const fonts = {
-  heading: `Plus Jakarta Sans, sans-serif, ${base.fonts?.heading}`,
-  body: `Plus Jakarta Sans, sans-serif, ${base.fonts?.body}`
+  heading: `Plus Jakarta Sans, sans-serif`,
+  body: `Plus Jakarta Sans, sans-serif`
 };
 
 const theme = extendTheme({
   config,
+  components,
   colors,
   fonts,
   semanticTokens: {

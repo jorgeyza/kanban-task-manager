@@ -8,7 +8,7 @@ export const Button: ComponentStyleConfig = {
   },
   sizes: {
     lg: {
-      fontSize: 'lg',
+      fontSize: 'md',
       px: '25px',
       py: '15px'
     },
