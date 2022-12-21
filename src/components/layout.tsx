@@ -1,21 +1,19 @@
-import { Container, Grid, GridItem } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children, className }: { children: React.ReactNode; className: string }) => {
   return (
-    <Grid templateColumns='300px 1fr' height='100vh'>
-      <GridItem>
-        <Sidebar />
-      </GridItem>
-      <GridItem height={'full'}>
+    <Flex overflow='hidden' data-test='app-layout' className={className}>
+      <Sidebar />
+      <Flex flexDirection='column' width='full' data-test='right-side' overflow='auto'>
         <Header />
-        <Container maxW='container.md' position='relative'>
+        <Flex as='main' padding={6} flexGrow={1}>
           {children}
-        </Container>
-      </GridItem>
-    </Grid>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 
