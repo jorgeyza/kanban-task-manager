@@ -2,12 +2,16 @@ import { defineStyleConfig } from '@chakra-ui/react';
 
 export const Text = defineStyleConfig({
   variants: {
-    'board-title': {
-      fontSize: 'xs',
-      letterSpacing: '.24rem',
-      fontWeight: 'bold',
-      lineHeight: 'shorter',
-      textTransform: 'uppercase'
+    'basic-text': {
+      fontSize: '13px'
+    },
+    'boards-list': {
+      fontSize: '15px',
+      fontWeight: 'bold'
+    },
+    'modal-checkbox': {
+      fontSize: '12px',
+      fontWeight: 'bold'
     }
   }
 });

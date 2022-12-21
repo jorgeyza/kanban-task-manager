@@ -20,14 +20,14 @@ export const Button: ComponentStyleConfig = {
   },
   variants: {
     primary: {
-      bg: 'purple',
+      bg: 'customPurple.500',
       _hover: {
         bg: 'lightPurple'
       }
     },
     secondary: {
       bg: 'lightGray',
-      color: 'purple',
+      color: 'customPurple.500',
       _hover: {
         bg: 'lightPurple'
       }

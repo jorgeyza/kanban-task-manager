@@ -1,4 +1,4 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { baseTheme as base, extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
 import { globalStyles as styles } from './styles';
 import components from './components';
@@ -10,18 +10,23 @@ const config: ThemeConfig = {
 
 const colors = {
   black: '#000112',
-  gray: '#828FA3',
+  customGray: '#828FA3',
   white: '#FFFFFF',
-  whiteSoft: '#eff6ff',
+  whiteSoft: '#EFF6FF',
   lightGray: '#E4EBFA',
   lightGrayAlpha25: 'rgba(130, 143, 163, .25)',
   lighterGray: '#F4F7FD',
   darkGray: '#3E3F4E',
   darkerGray: '#2B2C37',
-  purple: '#635FC7',
+  customPurple: {
+    ...base.colors.purple,
+    200: '#9895DA',
+    500: '#635FC7',
+    600: '#5D59C5'
+  },
   purpleAlpha25: 'rgba(99, 95, 199, .25)',
   lightPurple: '#A8A4FF',
-  red: '#EA5555',
+  customRed: '#EA5555',
   lightRed: '#FF9898',
   lightBlack: '#20212C'
 };

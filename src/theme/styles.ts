@@ -19,7 +19,7 @@ export const globalStyles = {
       scrollBehavior: 'smooth'
     },
     body: {
-      color: 'gray',
+      color: 'customGray',
       backgroundColor: 'mainBackgroundColor'
     }
   }

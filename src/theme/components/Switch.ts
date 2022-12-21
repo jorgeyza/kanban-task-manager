@@ -18,9 +18,9 @@ const sizes = {
 
 const baseStyle = definePartsStyle({
   track: {
-    bg: 'purple',
+    bg: 'customPurple.500',
     _checked: {
-      bg: 'purple'
+      bg: 'customPurple.500'
     },
     _hover: {
       bg: 'lightPurple'
