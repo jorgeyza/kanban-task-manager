@@ -6,7 +6,7 @@ import chevronUpIcon from './icon-chevron-up.png';
 import crossIcon from './icon-cross.png';
 import HideSidebarIconSVG from './icon-hide-sidebar';
 import ShowSidebarIconSVG from './icon-show-sidebar';
-import verticalEllipsisIcon from './icon-vertical-ellipsis.png';
+import VerticalEllipsisIconSVG from './icon-vertical-ellipsis';
 import Logo from './logo';
 import logoMobile from './logo-mobile.png';
 import purpleCheckIcon from './purple-check-icon.png';
@@ -24,10 +24,10 @@ export {
   crossIcon,
   HideSidebarIconSVG,
   ShowSidebarIconSVG,
-  verticalEllipsisIcon,
+  VerticalEllipsisIconSVG,
   Logo,
   logoMobile,
   purpleCheckIcon,
   LightThemeIconSVG,
-  DarkThemeIconSVG
+  DarkThemeIconSVG,
 };
