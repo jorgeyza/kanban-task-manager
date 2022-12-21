@@ -1,6 +1,7 @@
 import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 
 import { HideSidebarIconSVG, Logo } from '@/assets';
+
 import AllBoards from './AllBoards';
 import ColorToggle from './ColorToggle';
 
@@ -13,13 +14,15 @@ const Sidebar = () => {
     <Flex
       as='aside'
       flexDirection='column'
-      width={300}
-      paddingY={8}
+      flexBasis={300}
+      flexShrink={0}
       height='100vh'
+      paddingY={8}
       borderRight='1px solid'
       borderColor={sidebarBorderColor}
-      backgroundColor={sidebarBackgroundColor}>
-      <Box marginBottom={54} paddingX={8} color={LogoColor}>
+      backgroundColor={sidebarBackgroundColor}
+    >
+      <Box marginBottom={54} paddingX={6} color={LogoColor}>
         <Logo />
       </Box>
       <AllBoards />
@@ -31,9 +34,7 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-// type Props = {}
-
-const HideSidebarButton = (props: Props) => {
+const HideSidebarButton = () => {
   const hoverBackgroundColor = useColorModeValue('purpleAlpha25', 'white');
   return (
     <Flex
@@ -42,15 +43,14 @@ const HideSidebarButton = (props: Props) => {
       alignItems='center'
       height='48px'
       columnGap={4}
-      paddingX={8}
+      paddingX={6}
       marginRight={6}
       borderRightRadius='full'
       cursor='pointer'
-      _hover={{ backgroundColor: hoverBackgroundColor, color: 'purple' }}>
+      _hover={{ backgroundColor: hoverBackgroundColor, color: 'customPurple.500' }}
+    >
       <HideSidebarIconSVG />
-      <Text>Hide Sidebar</Text>
+      <Text variant='boards-list'>Hide Sidebar</Text>
     </Flex>
   );
 };
-
-// export default HideSidebarButton

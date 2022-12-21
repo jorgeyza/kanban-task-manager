@@ -12,10 +12,12 @@ const ColorToggle = () => {
       justifyContent='center'
       gap={2}
       paddingY={3}
+      marginTop='auto'
       marginX={6}
-      marginBottom={1}
+      marginBottom={2}
       rounded={8}
-      backgroundColor={backgroundColor}>
+      backgroundColor={backgroundColor}
+    >
       <LightThemeIconSVG />
       <Switch onChange={toggleColorMode} />
       <DarkThemeIconSVG />
@@ -24,25 +26,3 @@ const ColorToggle = () => {
 };
 
 export default ColorToggle;
-
-// const Switchlala: FC<SwitchProps> = ({ onChange }) => {
-//   const { isOpen, onToggle } = useDisclosure();
-//   const handleOnClick = () => {
-//     onToggle();
-//     setTimeout(() => onChange(isOpen), 200);
-//   };
-
-//   return (
-//     <Stack onClick={handleOnClick} width={10} rounded={'full'} backgroundColor={'purple'} p={'3px'} height={5}>
-//       <chakra.span
-//         transition={'all 200ms ease-in'}
-//         ml={isOpen ? 0 : 'calc(100% - 14px)'}
-//         rounded={'full'}
-//         display={'block'}
-//         width={3.5}
-//         backgroundColor={'white'}
-//         height={3.5}
-//       />
-//     </Stack>
-//   );
-// };

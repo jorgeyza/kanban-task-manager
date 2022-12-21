@@ -1,16 +1,17 @@
+import { Heading, List, ListItem, Text, useColorModeValue } from '@chakra-ui/react';
+
 import { BoardIconSVG } from '@/assets';
-import { Box, List, ListItem, Text, useColorModeValue } from '@chakra-ui/react';
 
 const boards = ['Platform Launch', 'Marketing Plan', 'Roadmap'];
 
 const AllBoards = () => {
   const hoverBackgroundColor = useColorModeValue('purpleAlpha25', 'white');
   return (
-    <Box marginBottom='auto'>
-      <Text paddingLeft={8} marginBottom={5} variant='board-title'>
+    <div>
+      <Heading paddingLeft={6} marginBottom={5} variant='board-column-title'>
         all boards {`(${8})`}
-      </Text>
-      <List>
+      </Heading>
+      <List as='nav' role='navigation'>
         {boards.map((board) => {
           return (
             <ListItem
@@ -20,13 +21,14 @@ const AllBoards = () => {
               alignItems='center'
               height='48px'
               columnGap={4}
-              paddingX={8}
+              paddingX={6}
               marginRight={6}
               borderRightRadius='full'
               cursor='pointer'
-              _hover={{ backgroundColor: hoverBackgroundColor, color: 'purple' }}>
+              _hover={{ backgroundColor: hoverBackgroundColor, color: 'customPurple.500' }}
+            >
               <BoardIconSVG />
-              <Text>{board}</Text>
+              <Text variant='boards-list'>{board}</Text>
             </ListItem>
           );
         })}
@@ -34,19 +36,20 @@ const AllBoards = () => {
           display='flex'
           position='relative'
           alignItems='center'
-          color='purple'
+          color='customPurple.500'
           height='48px'
           columnGap={4}
-          paddingX={8}
+          paddingX={6}
           marginRight={6}
           borderRightRadius='full'
           cursor='pointer'
-          _hover={{ backgroundColor: hoverBackgroundColor }}>
+          _hover={{ backgroundColor: hoverBackgroundColor }}
+        >
           <BoardIconSVG />
-          <Text>+ Create New Board</Text>
+          <Text variant='boards-list'>+ Create New Board</Text>
         </ListItem>
       </List>
-    </Box>
+    </div>
   );
 };
 
