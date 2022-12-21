@@ -2,10 +2,11 @@ import { type AppType } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Plus_Jakarta_Sans } from '@next/font/google';
 
+import Layout from '@/components/layout';
+
 import { trpc } from '@/utils/trpc';
 
 import theme from '@/theme';
-import Layout from '@/components/layout';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ['500', '700'],
@@ -15,11 +16,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
-      <main className={plusJakartaSans.className}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </main>
+      <Layout className={plusJakartaSans.className}>
+        <Component {...pageProps} />
+      </Layout>
     </ChakraProvider>
   );
 };
