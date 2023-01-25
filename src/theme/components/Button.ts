@@ -1,47 +1,47 @@
-import { type ComponentStyleConfig } from '@chakra-ui/react';
+import { type ComponentStyleConfig } from "@chakra-ui/react";
 
 export const Button: ComponentStyleConfig = {
   baseStyle: {
-    fontWeight: 'bold',
-    color: 'white',
-    borderRadius: 'full'
+    fontWeight: "bold",
+    color: "white",
+    borderRadius: "full",
   },
   sizes: {
     lg: {
-      fontSize: 'md',
-      px: '25px',
-      py: '15px'
+      fontSize: "md",
+      px: "25px",
+      py: "15px",
     },
     md: {
-      fontSize: 'sm',
-      px: '23px',
-      py: '8px'
-    }
+      fontSize: "sm",
+      px: "23px",
+      py: "8px",
+    },
   },
   variants: {
     primary: {
-      bg: 'customPurple.500',
+      bg: "customPurple.500",
       _hover: {
-        bg: 'lightPurple'
-      }
+        bg: "lightPurple",
+      },
     },
     secondary: {
-      bg: 'lightGray',
-      color: 'customPurple.500',
+      bg: "lightGray",
+      color: "customPurple.500",
       _hover: {
-        bg: 'lightPurple'
-      }
+        bg: "lightPurple",
+      },
     },
     destructive: {
-      bg: 'error',
+      bg: "error",
       _hover: {
-        bg: 'lightRed'
-      }
-    }
+        bg: "lightRed",
+      },
+    },
   },
   defaultProps: {
-    size: 'md',
-    variant: 'primary',
-    colorScheme: ''
-  }
+    size: "md",
+    variant: "primary",
+    colorScheme: "",
+  },
 };
