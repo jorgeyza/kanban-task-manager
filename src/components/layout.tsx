@@ -26,7 +26,9 @@ const Layout = ({
           flexDirection="column"
           alignItems="flex-start"
           rowGap={4}
+          height="calc(100vh - 97px)"
           padding={6}
+          data-test="main-container"
         >
           {children}
         </Flex>
