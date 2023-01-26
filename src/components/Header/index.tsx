@@ -70,22 +70,22 @@ const Header = () => {
         borderBottomColor={borderColor}
         borderBottomWidth="thin"
       >
-        <Flex height="100%" columnGap={6} alignItems='center'>
-        {!isDrawerOpen && (
-          <Center
-            paddingRight={6}
-            height="100%"
-            paddingLeft={1}
-            borderRight="1px solid"
-            borderColor={logoBorderColor}
-            color={logoColor}
-          >
-            <Logo />
-          </Center>
-        )}
-        <Heading as="h1" size="md" color={headingColor}>
-          Platform Launch
-        </Heading>
+        <Flex height="100%" columnGap={6} alignItems="center">
+          {!isDrawerOpen && (
+            <Center
+              paddingRight={6}
+              height="100%"
+              paddingLeft={1}
+              borderRight="1px solid"
+              borderColor={logoBorderColor}
+              color={logoColor}
+            >
+              <Logo />
+            </Center>
+          )}
+          <Heading as="h1" size="md" color={headingColor}>
+            Platform Launch
+          </Heading>
         </Flex>
         <Flex alignItems="center" columnGap={6}>
           <Button

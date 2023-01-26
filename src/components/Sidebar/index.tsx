@@ -48,7 +48,11 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-const HideSidebarButton = ({ onHideSidebar }: { onHideSidebar: () => void }) => {
+const HideSidebarButton = ({
+  onHideSidebar,
+}: {
+  onHideSidebar: () => void;
+}) => {
   const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");
   return (
     <Flex
