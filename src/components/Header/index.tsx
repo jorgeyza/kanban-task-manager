@@ -21,15 +21,22 @@ import {
   Input,
   useColorModeValue,
   useDisclosure,
+  Center,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useAtom } from "jotai";
 
-import { VerticalEllipsisIconSVG } from "@/assets";
+import { Logo, VerticalEllipsisIconSVG } from "@/assets";
+import { drawerAtom } from "@/pages/_app";
 
 const Header = () => {
   const borderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
   const backgroundColor = useColorModeValue("white", "darkerGray");
   const headingColor = useColorModeValue("black", "white");
+  const logoColor = useColorModeValue("black", "white");
+  const logoBorderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
+
+  const [isDrawerOpen] = useAtom(drawerAtom);
 
   const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
@@ -59,13 +66,27 @@ const Header = () => {
         justifyContent="space-between"
         height="97px"
         alignItems="center"
-        padding={5}
+        paddingX={5}
         borderBottomColor={borderColor}
         borderBottomWidth="thin"
       >
+        <Flex height="100%" columnGap={6} alignItems='center'>
+        {!isDrawerOpen && (
+          <Center
+            paddingRight={6}
+            height="100%"
+            paddingLeft={1}
+            borderRight="1px solid"
+            borderColor={logoBorderColor}
+            color={logoColor}
+          >
+            <Logo />
+          </Center>
+        )}
         <Heading as="h1" size="md" color={headingColor}>
           Platform Launch
         </Heading>
+        </Flex>
         <Flex alignItems="center" columnGap={6}>
           <Button
             variant="primary"
