@@ -14,7 +14,7 @@ const Home: NextPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
 
   const handleOpenDrawer = () => {
-    setIsDrawerOpen((value) => !value);
+    setIsDrawerOpen(true);
   };
 
   return (
@@ -25,11 +25,13 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Board />
-      <Button transform="auto" translateX="-40px" onClick={handleOpenDrawer}>
-        <Box paddingLeft={3}>
-          <ShowSidebarIconSVG />
-        </Box>
-      </Button>
+      {!isDrawerOpen && (
+        <Button transform="auto" translateX="-40px" onClick={handleOpenDrawer}>
+          <Box paddingLeft={3}>
+            <ShowSidebarIconSVG />
+          </Box>
+        </Button>
+      )}
     </>
   );
 };
