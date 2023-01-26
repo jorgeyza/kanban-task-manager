@@ -1,21 +1,35 @@
-import { type NextPage } from 'next';
-import Head from 'next/head';
+import { type NextPage } from "next";
+import Head from "next/head";
+import { Box, Button } from "@chakra-ui/react";
 
-import { trpc } from '@/utils/trpc';
+import { trpc } from "@/utils/trpc";
 
-import Board from '@/components/Board';
+import Board from "@/components/Board";
+import { ShowSidebarIconSVG } from "@/assets";
+import { useAtom } from "jotai";
+import { drawerAtom } from "./_app";
 
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: 'from tRPC' });
+  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
+
+  const handleOpenDrawer = () => {
+    setIsDrawerOpen((value) => !value);
+  };
 
   return (
     <>
       <Head>
         <title>Kanban task manager</title>
-        <meta name='description' content='Kanban task manager' />
-        <link rel='icon' href='/favicon.ico' />
+        <meta name="description" content="Kanban task manager" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Board />
+      <Button transform="auto" translateX="-40px" onClick={handleOpenDrawer}>
+        <Box paddingLeft={3}>
+          <ShowSidebarIconSVG />
+        </Box>
+      </Button>
     </>
   );
 };

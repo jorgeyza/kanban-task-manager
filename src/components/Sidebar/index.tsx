@@ -1,56 +1,74 @@
-import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 
-import { HideSidebarIconSVG, Logo } from '@/assets';
+import { HideSidebarIconSVG, Logo } from "@/assets";
 
-import AllBoards from './AllBoards';
-import ColorToggle from './ColorToggle';
+import AllBoards from "./AllBoards";
+import ColorToggle from "./ColorToggle";
+import { drawerAtom } from "@/pages/_app";
 
 const Sidebar = () => {
-  const sidebarBackgroundColor = useColorModeValue('white', 'darkerGray');
-  const sidebarBorderColor = useColorModeValue('lightGray', 'lightGrayAlpha25');
-  const LogoColor = useColorModeValue('black', 'white');
+  const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
+
+  const sidebarBackgroundColor = useColorModeValue("white", "darkerGray");
+  const sidebarBorderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
+  const LogoColor = useColorModeValue("black", "white");
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+  };
 
   return (
-    <Flex
-      as='aside'
-      flexDirection='column'
-      flexBasis={300}
-      flexShrink={0}
-      height='100vh'
-      paddingY={8}
-      borderRight='1px solid'
-      borderColor={sidebarBorderColor}
-      backgroundColor={sidebarBackgroundColor}
-    >
-      <Box marginBottom={54} paddingX={6} color={LogoColor}>
-        <Logo />
-      </Box>
-      <AllBoards />
-      <ColorToggle />
-      <HideSidebarButton />
-    </Flex>
+    <>
+      <Flex
+        as="aside"
+        flexDirection="column"
+        height="100vh"
+        minWidth={isDrawerOpen ? 300 : 0}
+        width={0}
+        paddingY={8}
+        borderRight="1px solid"
+        borderColor={sidebarBorderColor}
+        backgroundColor={sidebarBackgroundColor}
+        overflow="hidden"
+        transition="all .5s cubic-bezier(0.820, 0.085, 0.395, 0.895)"
+        data-test="sidebar"
+      >
+        <Box marginBottom={54} paddingX={6} color={LogoColor}>
+          <Logo />
+        </Box>
+        <AllBoards />
+        <ColorToggle />
+        <HideSidebarButton onHideSidebar={handleCloseDrawer} />
+      </Flex>
+      {/* {isDrawerOpen ? <span>draweropen</span> : <span>drawerclosed</span>} */}
+    </>
   );
 };
 
 export default Sidebar;
 
-const HideSidebarButton = () => {
-  const hoverBackgroundColor = useColorModeValue('purpleAlpha25', 'white');
+const HideSidebarButton = ({ onHideSidebar }: { onHideSidebar: () => void }) => {
+  const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");
   return (
     <Flex
-      display='flex'
-      position='relative'
-      alignItems='center'
-      height='48px'
+      display="flex"
+      position="relative"
+      alignItems="center"
+      height="48px"
       columnGap={4}
       paddingX={6}
       marginRight={6}
-      borderRightRadius='full'
-      cursor='pointer'
-      _hover={{ backgroundColor: hoverBackgroundColor, color: 'customPurple.500' }}
+      borderRightRadius="full"
+      cursor="pointer"
+      _hover={{
+        backgroundColor: hoverBackgroundColor,
+        color: "customPurple.500",
+      }}
+      onClick={onHideSidebar}
     >
       <HideSidebarIconSVG />
-      <Text variant='boards-list'>Hide Sidebar</Text>
+      <Text variant="boards-list">Hide Sidebar</Text>
     </Flex>
   );
 };
