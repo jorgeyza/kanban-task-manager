@@ -5,7 +5,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { DarkThemeIconSVG, LightThemeIconSVG } from "@/assets";
+import { DarkThemeIcon, LightThemeIcon } from "@/assets";
 
 const ColorToggle = () => {
   const { toggleColorMode } = useColorMode();
@@ -23,9 +23,9 @@ const ColorToggle = () => {
       rounded={8}
       backgroundColor={backgroundColor}
     >
-      <LightThemeIconSVG />
+      <LightThemeIcon />
       <Switch onChange={toggleColorMode} />
-      <DarkThemeIconSVG />
+      <DarkThemeIcon />
     </HStack>
   );
 };

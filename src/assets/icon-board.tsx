@@ -1,4 +1,4 @@
-const BoardIconSVG = () => {
+const BoardIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
       <path
@@ -9,4 +9,4 @@ const BoardIconSVG = () => {
   );
 };
 
-export default BoardIconSVG;
+export default BoardIcon;

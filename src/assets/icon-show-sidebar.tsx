@@ -1,4 +1,4 @@
-const ShowSidebarIconSVG = () => {
+const ShowSidebarIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" fill="none">
       <g clipPath="url(#a)">
@@ -16,4 +16,4 @@ const ShowSidebarIconSVG = () => {
   );
 };
 
-export default ShowSidebarIconSVG;
+export default ShowSidebarIcon;

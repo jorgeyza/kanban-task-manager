@@ -1,4 +1,4 @@
-const LightThemeIconSVG = () => {
+const LightThemeIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" fill="none">
       <path
@@ -9,4 +9,4 @@ const LightThemeIconSVG = () => {
   );
 };
 
-export default LightThemeIconSVG;
+export default LightThemeIcon;

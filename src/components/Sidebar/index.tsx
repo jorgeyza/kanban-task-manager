@@ -1,7 +1,7 @@
 import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
-import { HideSidebarIconSVG, Logo } from "@/assets";
+import { HideSidebarIcon, Logo } from "@/assets";
 
 import AllBoards from "./AllBoards";
 import ColorToggle from "./ColorToggle";
@@ -71,7 +71,7 @@ const HideSidebarButton = ({
       }}
       onClick={onHideSidebar}
     >
-      <HideSidebarIconSVG />
+      <HideSidebarIcon />
       <Text variant="boards-list">Hide Sidebar</Text>
     </Flex>
   );

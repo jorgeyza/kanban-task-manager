@@ -5,7 +5,7 @@ import { Box, Button } from "@chakra-ui/react";
 import { trpc } from "@/utils/trpc";
 
 import Board from "@/components/Board";
-import { ShowSidebarIconSVG } from "@/assets";
+import { ShowSidebarIcon } from "@/assets";
 import { useAtom } from "jotai";
 import { drawerAtom } from "./_app";
 
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
       {!isDrawerOpen && (
         <Button transform="auto" translateX="-40px" onClick={handleOpenDrawer}>
           <Box paddingLeft={3}>
-            <ShowSidebarIconSVG />
+            <ShowSidebarIcon />
           </Box>
         </Button>
       )}

@@ -6,7 +6,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { BoardIconSVG } from "@/assets";
+import { BoardIcon } from "@/assets";
 
 const boards = ["Platform Launch", "Marketing Plan", "Roadmap"];
 
@@ -36,7 +36,7 @@ const AllBoards = () => {
                 color: "customPurple.500",
               }}
             >
-              <BoardIconSVG />
+              <BoardIcon />
               <Text variant="boards-list">{board}</Text>
             </ListItem>
           );
@@ -54,7 +54,7 @@ const AllBoards = () => {
           cursor="pointer"
           _hover={{ backgroundColor: hoverBackgroundColor }}
         >
-          <BoardIconSVG />
+          <BoardIcon />
           <Text variant="boards-list">+ Create New Board</Text>
         </ListItem>
       </List>

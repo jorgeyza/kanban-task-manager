@@ -1,33 +1,33 @@
-import addTaskMobileIcon from "./icon-add-task-mobile.png";
-import BoardIconSVG from "./icon-board";
-import checkIcon from "./icon-check.png";
-import chevronDownIcon from "./icon-chevron-down.png";
-import chevronUpIcon from "./icon-chevron-up.png";
-import crossIcon from "./icon-cross.png";
-import HideSidebarIconSVG from "./icon-hide-sidebar";
-import ShowSidebarIconSVG from "./icon-show-sidebar";
-import VerticalEllipsisIconSVG from "./icon-vertical-ellipsis";
+import AddTaskMobileIcon from "./icon-add-task-mobile";
+import BoardIcon from "./icon-board";
+import CheckIcon from "./icon-check";
+import ChevronDownIcon from "./icon-chevron-down";
+import ChevronUpIcon from "./icon-chevron-up";
+import CrossIcon from "./icon-cross";
+import HideSidebarIcon from "./icon-hide-sidebar";
+import ShowSidebarIcon from "./icon-show-sidebar";
+import VerticalEllipsisIcon from "./icon-vertical-ellipsis";
 import Logo from "./logo";
-import logoMobile from "./logo-mobile.png";
-import purpleCheckIcon from "./purple-check-icon.png";
-import LightThemeIconSVG from "./icon-light-theme";
-import DarkThemeIconSVG from "./icon-dark-theme";
+import LogoMobile from "./logo-mobile";
+import PurpleCheckIcon from "./icon-purple-check";
+import LightThemeIcon from "./icon-light-theme";
+import DarkThemeIcon from "./icon-dark-theme";
 
 // SVGs minified with SVGOMG https://jakearchibald.github.io/svgomg/
 
 export {
-  addTaskMobileIcon,
-  BoardIconSVG,
-  checkIcon,
-  chevronDownIcon,
-  chevronUpIcon,
-  crossIcon,
-  HideSidebarIconSVG,
-  ShowSidebarIconSVG,
-  VerticalEllipsisIconSVG,
+  AddTaskMobileIcon,
+  BoardIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CrossIcon,
+  HideSidebarIcon,
+  ShowSidebarIcon,
+  VerticalEllipsisIcon,
   Logo,
-  logoMobile,
-  purpleCheckIcon,
-  LightThemeIconSVG,
-  DarkThemeIconSVG,
+  LogoMobile,
+  PurpleCheckIcon,
+  LightThemeIcon,
+  DarkThemeIcon,
 };
