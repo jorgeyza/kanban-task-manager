@@ -27,6 +27,7 @@ const Layout = ({
           alignItems="flex-start"
           rowGap={4}
           padding={6}
+          overflow="auto"
           data-test="main-container"
         >
           {children}
