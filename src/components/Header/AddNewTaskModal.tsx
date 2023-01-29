@@ -1,8 +1,6 @@
 import {
-  Box,
-  Checkbox,
-  CheckboxGroup,
-  Flex,
+  chakra,
+  Button,
   Heading,
   Modal,
   ModalBody,
@@ -10,141 +8,163 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Text,
+  Textarea,
+  FormErrorMessage,
+  FormLabel,
+  FormControl,
+  Input,
   useColorModeValue,
-  useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-import { VerticalEllipsisIconSVG } from "@/assets";
+import { TASK_STATUS_ENUM } from "@/constants";
+import type { ChakraModalProps } from "@/types";
+import { useState } from "react";
 
-const AddNewTaskModal = () => {
-  const taskBackgroundColor = useColorModeValue("white", "darkerGray");
-  const checkboxBackgroundColor = useColorModeValue(
-    "lighterGray",
-    "lightBlack"
-  );
-  const taskHoverBackgroundColor = useColorModeValue("whiteSoft", "darkGray");
-  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
-    useDisclosure();
+const addTaskSchema = z.object({
+  title: z.string().default("Untitled"),
+  description: z.string().optional(),
+  subtask: z.array(z.string()).optional(),
+  status: z.enum(TASK_STATUS_ENUM),
+});
 
-  const taskmodalButtonProps = getButtonProps();
-  const taskmodalDisclosureProps = getDisclosureProps();
+type FormData = z.infer<typeof addTaskSchema>;
+
+const AddNewTaskModal = ({
+  isOpen,
+  onClose,
+  getDisclosureProps,
+}: ChakraModalProps) => {
+  const backgroundColor = useColorModeValue("white", "darkerGray");
+  const [subtasks, setSubtasks] = useState([]);
+
+  const addNewTaskModalDisclosureProps = getDisclosureProps();
+
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(addTaskSchema),
+  });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+
+  const handleAddNewSubtask = () => {
+    setSubtasks(subtasks.concat());
+  };
 
   return (
-    <>
-      <Flex
-        as="button"
-        flexDirection="column"
-        rowGap={2}
-        paddingX={6}
-        paddingY={4}
-        width="280px"
-        borderRadius={8}
-        backgroundColor={taskBackgroundColor}
-        cursor="pointer"
-        _hover={{ backgroundColor: taskHoverBackgroundColor }}
-        onClick={onOpen}
-        {...taskmodalButtonProps}
-      >
-        <Heading as="h3" variant="task-heading">
-          Create paper prototypes and conduct 10 usability tests with potential
-          customers
-        </Heading>
-        <Text variant="basic-text">1 of 3 subtasks</Text>
-      </Flex>
-      <Modal isOpen={isOpen} onClose={onClose} {...taskmodalDisclosureProps}>
-        <ModalOverlay />
-        <ModalContent
-          backgroundColor={taskBackgroundColor}
-          padding={8}
-          rowGap={6}
-        >
-          <ModalHeader padding={0}>
-            <Flex justifyContent="space-between">
-              <Heading as="h4" variant="modal-title">
-                Create paper prototypes and conduct 10 usability tests with
-                potential customers
-              </Heading>
-              <Box flexShrink={0} cursor="pointer">
-                <VerticalEllipsisIconSVG />
-              </Box>
-            </Flex>
-          </ModalHeader>
-          <ModalBody
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      size="lg"
+      {...addNewTaskModalDisclosureProps}
+    >
+      <ModalOverlay />
+      <ModalContent backgroundColor={backgroundColor} padding={8} rowGap={6}>
+        <ModalHeader padding={0}>
+          <Heading as="h4" variant="modal-title">
+            Add New Task
+          </Heading>
+        </ModalHeader>
+        <ModalBody display="flex" flexDirection="column" rowGap={6} padding={0}>
+          <chakra.form
             display="flex"
             flexDirection="column"
             rowGap={6}
-            padding={0}
+            onSubmit={handleSubmit(onSubmit)}
           >
-            <Text as="p" variant="basic-text">
-              some description goes here lalala alala alalalalalala allalaa al
-              allaa some-tlaas-dfdfssd
-            </Text>
-            <Flex flexDirection="column" rowGap={4}>
-              <Heading as="h5" variant="modal-subtitle">
-                Subtasks (2 of 2)
-              </Heading>
-              <CheckboxGroup
-                colorScheme="customPurple"
-                defaultValue={["naruto", "kakashi"]}
-              >
-                <VStack spacing={2} alignItems="start">
-                  <Checkbox
-                    value="naruto"
-                    width="full"
-                    padding={3}
-                    borderRadius={4}
-                    backgroundColor={checkboxBackgroundColor}
-                  >
-                    <Text variant="modal-checkbox">
-                      Meet to review notes from previous tests and plan changes
-                    </Text>
-                  </Checkbox>
-                  <Checkbox
-                    value="sasuke"
-                    width="full"
-                    padding={3}
-                    borderRadius={4}
-                    backgroundColor={checkboxBackgroundColor}
-                  >
-                    <Text variant="modal-checkbox">
-                      Make changes to paper prototypes
-                    </Text>
-                  </Checkbox>
-                  <Checkbox
-                    value="kakashi"
-                    width="full"
-                    padding={3}
-                    borderRadius={4}
-                    backgroundColor={checkboxBackgroundColor}
-                  >
-                    <Text variant="modal-checkbox">
-                      Conduct 5 usability tests
-                    </Text>
-                  </Checkbox>
-                </VStack>
-              </CheckboxGroup>
-            </Flex>
-            <Flex flexDirection="column" rowGap={2}>
-              <Heading as="h5" variant="modal-subtitle">
+            <FormControl
+              borderColor="lightGrayAlpha25"
+              isInvalid={Boolean(errors.title)}
+            >
+              <FormLabel htmlFor="title" variant="modal-subtitle">
+                Title
+              </FormLabel>
+              <Input
+                id="title"
+                placeholder="e.g Take coffee break"
+                {...register("title")}
+              />
+              <FormErrorMessage>
+                {errors.title && errors.title.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              borderColor="lightGrayAlpha25"
+              isInvalid={Boolean(errors.description)}
+            >
+              <FormLabel htmlFor="description" variant="modal-subtitle">
+                Description
+              </FormLabel>
+              <Textarea
+                id="description"
+                placeholder="It's always good to take a break. This  15 minute break will  recharge the batteries  a little."
+                {...register("description")}
+              />
+              <FormErrorMessage>
+                {errors.description && errors.description.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              borderColor="lightGrayAlpha25"
+              isInvalid={Boolean(errors.subtask)}
+            >
+              <FormLabel htmlFor="subtask" variant="modal-subtitle">
+                Subtask
+              </FormLabel>
+              <Input
+                id="subtask"
+                placeholder="e.g Make coffee"
+                {...register("subtask")}
+              />
+              <FormErrorMessage>
+                {errors.subtask && errors.subtask.message}
+              </FormErrorMessage>
+            </FormControl>
+            <Button
+              width="full"
+              variant="secondary"
+              onClick={handleAddNewSubtask}
+            >
+              Add New Subtask
+            </Button>
+            <FormControl isInvalid={Boolean(errors.status)}>
+              <FormLabel htmlFor="status" variant="modal-subtitle">
                 Status
-              </Heading>
+              </FormLabel>
               <Select
                 placeholder="Select option"
                 iconColor="customPurple.500"
                 borderColor="lightGrayAlpha25"
                 fontSize="13px"
               >
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
+                {TASK_STATUS_ENUM.map((taskStatus) => {
+                  return (
+                    <option key={taskStatus} value={taskStatus}>
+                      {taskStatus}
+                    </option>
+                  );
+                })}
               </Select>
-            </Flex>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+            </FormControl>
+            <Button
+              width="full"
+              variant="primary"
+              isLoading={isSubmitting}
+              type="submit"
+            >
+              Create Task
+            </Button>
+          </chakra.form>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 
