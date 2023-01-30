@@ -14,19 +14,21 @@ import {
   FormControl,
   Input,
   useColorModeValue,
+  Flex,
+  Center,
 } from "@chakra-ui/react";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { TASK_STATUS_ENUM } from "@/constants";
 import type { ChakraModalProps } from "@/types";
-import { useState } from "react";
+import { CrossIcon } from "@/assets";
 
 const addTaskSchema = z.object({
   title: z.string().default("Untitled"),
   description: z.string().optional(),
-  subtask: z.array(z.string()).optional(),
+  subtasks: z.array(z.object({ title: z.string() })).optional(),
   status: z.enum(TASK_STATUS_ENUM),
 });
 
@@ -38,23 +40,35 @@ const AddNewTaskModal = ({
   getDisclosureProps,
 }: ChakraModalProps) => {
   const backgroundColor = useColorModeValue("white", "darkerGray");
-  const [subtasks, setSubtasks] = useState([]);
 
   const addNewTaskModalDisclosureProps = getDisclosureProps();
 
   const {
     handleSubmit,
     register,
-    setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(addTaskSchema),
+    defaultValues: {
+      subtasks: [{ title: "" }],
+      status: "To do",
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "subtasks",
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
 
   const handleAddNewSubtask = () => {
-    setSubtasks(subtasks.concat());
+    append({ title: "" });
+  };
+
+  const handleDeleteSubtask = (index: number) => {
+    remove(index);
   };
 
   return (
@@ -113,18 +127,36 @@ const AddNewTaskModal = ({
             </FormControl>
             <FormControl
               borderColor="lightGrayAlpha25"
-              isInvalid={Boolean(errors.subtask)}
+              isInvalid={Boolean(errors.subtasks)}
             >
               <FormLabel htmlFor="subtask" variant="modal-subtitle">
-                Subtask
+                Subtasks
               </FormLabel>
-              <Input
-                id="subtask"
-                placeholder="e.g Make coffee"
-                {...register("subtask")}
-              />
+              <Flex
+                flexDirection="column"
+                rowGap={3}
+                maxHeight={250}
+                overflow="auto"
+              >
+                {fields.map((subtask, index) => {
+                  return (
+                    <Flex key={subtask.id} columnGap={4}>
+                      <Input
+                        placeholder="e.g Make coffee"
+                        {...register(`subtasks.${index}.title` as const)}
+                      />
+                      <Center
+                        cursor="pointer"
+                        onClick={() => handleDeleteSubtask(index)}
+                      >
+                        <CrossIcon />
+                      </Center>
+                    </Flex>
+                  );
+                })}
+              </Flex>
               <FormErrorMessage>
-                {errors.subtask && errors.subtask.message}
+                {errors.subtasks && errors.subtasks.message}
               </FormErrorMessage>
             </FormControl>
             <Button
@@ -139,10 +171,10 @@ const AddNewTaskModal = ({
                 Status
               </FormLabel>
               <Select
-                placeholder="Select option"
                 iconColor="customPurple.500"
                 borderColor="lightGrayAlpha25"
                 fontSize="13px"
+                {...register("status")}
               >
                 {TASK_STATUS_ENUM.map((taskStatus) => {
                   return (
