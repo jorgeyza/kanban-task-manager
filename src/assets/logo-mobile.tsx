@@ -1,7 +1,7 @@
 const LogoMobile = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="26" fill="none">
-      <g fill="#635FC7" clip-path="url(#a)">
+      <g fill="#635FC7" clipPath="url(#a)">
         <path d="M4 .5H2a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-21a2 2 0 0 0-2-2Z" />
         <path
           d="M13 .5h-2a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-21a2 2 0 0 0-2-2Z"

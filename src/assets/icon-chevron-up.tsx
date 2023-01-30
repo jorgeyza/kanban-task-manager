@@ -1,7 +1,7 @@
 const ChevronUpIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" fill="none">
-      <g clip-path="url(#a)">
+      <g clipPath="url(#a)">
         <path stroke="#635FC7" stroke-width="2" d="m9 6.5-4-4-4 4" />
       </g>
       <defs>
