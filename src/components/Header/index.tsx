@@ -15,7 +15,9 @@ import { useAtom } from "jotai";
 
 import { Logo, VerticalEllipsisIcon } from "@/assets";
 import { drawerAtom } from "@/pages/_app";
+
 import AddNewTaskModal from "./AddNewTaskModal";
+import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
 const Header = () => {
   const borderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
@@ -26,9 +28,24 @@ const Header = () => {
 
   const [isDrawerOpen] = useAtom(drawerAtom);
 
-  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
-    useDisclosure();
-  const addNewTaskModalButtonProps = getButtonProps();
+  const {
+    isOpen: addNewTaskModalIsOpen,
+    onOpen: addNewTaskModalOnOpen,
+    onClose: addNewTaskModalOnClose,
+    getButtonProps: addNewTaskModalGetButtonProps,
+    getDisclosureProps: addNewTaskModalGetDisclosureProps,
+  } = useDisclosure();
+  const addNewTaskModalButtonProps = addNewTaskModalGetButtonProps();
+
+  const {
+    isOpen: createOrEditBoardModalIsOpen,
+    onOpen: createOrEditBoardModalOnOpen,
+    onClose: createOrEditBoardModalOnClose,
+    getButtonProps: createOrEditBoardModalGetButtonProps,
+    getDisclosureProps: createOrEditBoardModalGetDisclosureProps,
+  } = useDisclosure();
+  const createOrEditBoardModalButtonProps =
+    createOrEditBoardModalGetButtonProps();
 
   return (
     <>
@@ -64,7 +81,7 @@ const Header = () => {
             variant="primary"
             size="lg"
             backgroundColor="customPurple.500"
-            onClick={onOpen}
+            onClick={addNewTaskModalOnOpen}
             {...addNewTaskModalButtonProps}
           >
             + Add New Task
@@ -74,16 +91,27 @@ const Header = () => {
               <VerticalEllipsisIcon />
             </MenuButton>
             <MenuList>
-              <MenuItem>Edit Board</MenuItem>
+              <MenuItem
+                onClick={createOrEditBoardModalOnOpen}
+                {...createOrEditBoardModalButtonProps}
+              >
+                Edit Board
+              </MenuItem>
               <MenuItem color="customRed">Delete Board</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
       </Flex>
       <AddNewTaskModal
-        isOpen={isOpen}
-        onClose={onClose}
-        getDisclosureProps={getDisclosureProps}
+        isOpen={addNewTaskModalIsOpen}
+        onClose={addNewTaskModalOnClose}
+        getDisclosureProps={addNewTaskModalGetDisclosureProps}
+      />
+      <CreateOrEditBoardModal
+        isOpen={createOrEditBoardModalIsOpen}
+        onClose={createOrEditBoardModalOnClose}
+        getDisclosureProps={createOrEditBoardModalGetDisclosureProps}
+        action="EDIT"
       />
     </>
   );

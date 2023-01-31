@@ -1,6 +1,12 @@
-import { Center, Flex, useColorModeValue } from "@chakra-ui/react";
+import {
+  Center,
+  Flex,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import Column from "./Column";
+import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
 const Board = () => {
   const newColumnBackgroundColor = useColorModeValue("lightGray", "darkerGray");
@@ -8,6 +14,10 @@ const Board = () => {
     "purpleAlpha25",
     "darkGray"
   );
+
+  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
+    useDisclosure();
+  const createOrEditBoardButtonProps = getButtonProps();
 
   return (
     <Flex
@@ -31,9 +41,17 @@ const Board = () => {
         color="customPurple.500"
         backgroundColor={newColumnBackgroundColor}
         _hover={{ backgroundColor: newColumnHoverBackgroundColor }}
+        onClick={onOpen}
+        {...createOrEditBoardButtonProps}
       >
         + New Column
       </Center>
+      <CreateOrEditBoardModal
+        isOpen={isOpen}
+        onClose={onClose}
+        getDisclosureProps={getDisclosureProps}
+        action="EDIT"
+      />
     </Flex>
   );
 };

@@ -4,14 +4,20 @@ import {
   ListItem,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import { BoardIcon } from "@/assets";
+import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 const boards = ["Platform Launch", "Marketing Plan", "Roadmap"];
 
 const AllBoards = () => {
   const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");
+
+  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
+    useDisclosure();
+  const createNewBoardButtonProps = getButtonProps();
   return (
     <div>
       <Heading paddingLeft={6} marginBottom={5} variant="board-column-title">
@@ -55,9 +61,21 @@ const AllBoards = () => {
           _hover={{ backgroundColor: hoverBackgroundColor }}
         >
           <BoardIcon />
-          <Text variant="boards-list">+ Create New Board</Text>
+          <Text
+            variant="boards-list"
+            onClick={onOpen}
+            {...createNewBoardButtonProps}
+          >
+            + Create New Board
+          </Text>
         </ListItem>
       </List>
+      <CreateOrEditBoardModal
+        isOpen={isOpen}
+        onClose={onClose}
+        getDisclosureProps={getDisclosureProps}
+        action="CREATE"
+      />
     </div>
   );
 };
