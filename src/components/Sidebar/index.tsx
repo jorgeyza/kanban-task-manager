@@ -41,7 +41,6 @@ const Sidebar = () => {
         <ColorToggle />
         <HideSidebarButton onHideSidebar={handleCloseDrawer} />
       </Flex>
-      {/* {isDrawerOpen ? <span>draweropen</span> : <span>drawerclosed</span>} */}
     </>
   );
 };
