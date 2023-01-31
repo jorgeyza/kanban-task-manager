@@ -28,7 +28,10 @@ import { CrossIcon } from "@/assets";
 const addTaskSchema = z.object({
   title: z.string().default("Untitled"),
   description: z.string().optional(),
-  subtasks: z.array(z.object({ title: z.string() })).optional(),
+  subtasks: z
+    .array(z.object({ title: z.string().default("Unnamed Column") }))
+    .max(10)
+    .optional(),
   status: z.enum(TASK_STATUS_ENUM),
 });
 
