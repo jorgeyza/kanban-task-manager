@@ -19,8 +19,8 @@ import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import type { DynamicChakraModalProps } from "@/types";
-import { CrossIcon } from "@/assets";
+import type { DynamicChakraModalProps } from "~/types";
+import { CrossIcon } from "~/assets";
 
 const MODAL_HEADER = {
   CREATE: "Create New Board",

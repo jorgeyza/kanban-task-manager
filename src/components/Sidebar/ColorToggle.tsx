@@ -5,7 +5,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { DarkThemeIcon, LightThemeIcon } from "@/assets";
+import { DarkThemeIcon, LightThemeIcon } from "~/assets";
 
 const ColorToggle = () => {
   const { toggleColorMode } = useColorMode();

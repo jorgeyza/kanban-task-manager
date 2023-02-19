@@ -21,9 +21,9 @@ import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { TASK_STATUS_ENUM } from "@/constants";
-import type { ChakraModalProps } from "@/types";
-import { CrossIcon } from "@/assets";
+import { TASK_STATUS_ENUM } from "~/constants";
+import type { ChakraModalProps } from "~/types";
+import { CrossIcon } from "~/assets";
 
 const addTaskSchema = z.object({
   title: z.string().default("Untitled"),

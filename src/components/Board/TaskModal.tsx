@@ -15,9 +15,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { VerticalEllipsisIcon } from "@/assets";
-import { TASK_STATUS_ENUM } from "@/constants";
-import type { ChakraModalProps } from "@/types";
+import { VerticalEllipsisIcon } from "~/assets";
+import { TASK_STATUS_ENUM } from "~/constants";
+import type { ChakraModalProps } from "~/types";
 
 const TaskModal = ({
   isOpen,

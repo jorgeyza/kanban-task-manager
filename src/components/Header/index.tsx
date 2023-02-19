@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
-import { Logo, VerticalEllipsisIcon } from "@/assets";
-import { drawerAtom } from "@/pages/_app";
+import { Logo, VerticalEllipsisIcon } from "~/assets";
+import { drawerAtom } from "~/pages/_app";
 
 import AddNewTaskModal from "./AddNewTaskModal";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";

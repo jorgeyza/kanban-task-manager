@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import { BoardIcon } from "@/assets";
+import { BoardIcon } from "~/assets";
 import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 const boards = ["Platform Launch", "Marketing Plan", "Roadmap"];

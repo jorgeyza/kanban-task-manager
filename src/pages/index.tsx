@@ -2,15 +2,15 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { Box, Button } from "@chakra-ui/react";
 
-import { trpc } from "@/utils/trpc";
+import { api } from "~/utils/api";
 
-import Board from "@/components/Board";
-import { ShowSidebarIcon } from "@/assets";
+import Board from "~/components/Board";
+import { ShowSidebarIcon } from "~/assets";
 import { useAtom } from "jotai";
 import { drawerAtom } from "./_app";
 
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
 
   const handleOpenDrawer = () => {

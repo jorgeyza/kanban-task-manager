@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import Sidebar from "~/components/Sidebar";
+import Header from "~/components/Header";
 
 const Layout = ({
   children,

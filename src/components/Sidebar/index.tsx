@@ -1,11 +1,11 @@
 import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
-import { HideSidebarIcon, Logo } from "@/assets";
+import { HideSidebarIcon, Logo } from "~/assets";
 
 import AllBoards from "./AllBoards";
 import ColorToggle from "./ColorToggle";
-import { drawerAtom } from "@/pages/_app";
+import { drawerAtom } from "~/pages/_app";
 
 const Sidebar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);

@@ -3,11 +3,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Plus_Jakarta_Sans } from "@next/font/google";
 import { atom, Provider } from "jotai";
 
-import Layout from "@/components/layout";
+import Layout from "~/components/layout";
 
-import { trpc } from "@/utils/trpc";
+import { api } from "~/utils/api";
 
-import theme from "@/theme";
+import theme from "~/theme";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["500", "700"],
@@ -28,4 +28,4 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   );
 };
 
-export default trpc.withTRPC(MyApp);
+export default api.withTRPC(MyApp);
