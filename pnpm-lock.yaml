@@ -16,6 +16,7 @@ specifiers:
   '@trpc/next': ^10.12.0
   '@trpc/react-query': ^10.12.0
   '@trpc/server': ^10.12.0
+  '@types/eslint': ^8.21.1
   '@types/node': ^18.14.0
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
@@ -63,6 +64,7 @@ devDependencies:
   '@chakra-ui/cli': 2.3.0_tncu2ai53lzgmizdedur7lbibe
   '@chakra-ui/styled-system': 2.6.1
   '@chakra-ui/theme-tools': 2.0.16_es2flcfvdj7o2v4vs237ptvmhy
+  '@types/eslint': 8.21.1
   '@types/node': 18.14.0
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
@@ -1875,6 +1877,17 @@ packages:
 
   /@tsconfig/node16/1.0.3:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
+    dev: true
+
+  /@types/eslint/8.21.1:
+    resolution: {integrity: sha512-rc9K8ZpVjNcLs8Fp0dkozd5Pt2Apk1glO4Vgz8ix1u6yFByxfqo5Yavpy65o+93TAe24jr7v+eSBtFLvOQtCRQ==}
+    dependencies:
+      '@types/estree': 1.0.0
+      '@types/json-schema': 7.0.11
+    dev: true
+
+  /@types/estree/1.0.0:
+    resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
   /@types/json-schema/7.0.11:
