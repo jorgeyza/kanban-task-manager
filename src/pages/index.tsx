@@ -10,7 +10,7 @@ import { useAtom } from "jotai";
 import { drawerAtom } from "./_app";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data: allBoards } = api.board.getAll.useQuery();
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
 
   const handleOpenDrawer = () => {
@@ -25,6 +25,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Board />
+      <pre>{JSON.stringify(allBoards, null, 2)}</pre>
       {!isDrawerOpen && (
         <Button transform="auto" translateX="-40px" onClick={handleOpenDrawer}>
           <Box paddingLeft={3}>
