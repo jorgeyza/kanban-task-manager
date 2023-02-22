@@ -6,12 +6,53 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Example {
+model Task {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  description String
+  subtasks    Subtask[]
+  boardId     String
+  Column      Column    @relation(fields: [columnId], references: [id])
+  columnId    String
+
+  @@index([columnId])
+}
+
+model Subtask {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  title     String
+  isDone    Boolean
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    String
+
+  @@index([taskId])
+}
+
+model Column {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  tasks     Task[]
+  Board     Board    @relation(fields: [boardId], references: [id])
+  boardId   String
+
+  @@index([boardId])
+}
+
+model Board {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  columns   Column[]
 }
