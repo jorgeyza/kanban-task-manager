@@ -28,12 +28,12 @@ const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
+console.log("🚀 ~ file: env.mjs:31 ~ processEnv:", processEnv);
 
 // Don't touch the part below
 // --------------------------
 
 const merged = server.merge(client);
-console.log("🚀 ~ file: env.mjs:36 ~ merged:", merged);
 
 /** @typedef {z.input<typeof merged>} MergedInput */
 /** @typedef {z.infer<typeof merged>} MergedOutput */
