@@ -18,8 +18,7 @@ model Task {
   title       String
   description String
   subtasks    Subtask[]
-  boardId     String
-  Column      Column    @relation(fields: [columnId], references: [id])
+  column      Column    @relation(fields: [columnId], references: [id])
   columnId    String
 
   @@index([columnId])
