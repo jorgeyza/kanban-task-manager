@@ -33,6 +33,7 @@ const processEnv = {
 // --------------------------
 
 const merged = server.merge(client);
+console.log("🚀 ~ file: env.mjs:36 ~ merged:", merged);
 
 /** @typedef {z.input<typeof merged>} MergedInput */
 /** @typedef {z.infer<typeof merged>} MergedOutput */
@@ -48,6 +49,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
       ? merged.safeParse(processEnv) // on server we can validate all env vars
       : client.safeParse(processEnv) // on client we can only validate the ones that are exposed
   );
+  console.log("🚀 ~ file: env.mjs:47 ~ parsed:", parsed);
 
   if (parsed.success === false) {
     console.error(
