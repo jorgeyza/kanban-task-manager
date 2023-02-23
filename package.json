@@ -46,6 +46,7 @@
     "eslint": "^8.34.0",
     "eslint-config-next": "^13.1.6",
     "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-chakra-ui": "^0.7.6",
     "prettier": "2.8.3",
     "prisma": "^4.10.1",
     "tsx": "^3.12.3",

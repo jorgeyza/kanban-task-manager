@@ -1,5 +1,3 @@
-import path from "node:path";
-
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   overrides: [
@@ -18,7 +16,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: "tsconfig.json",
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["chakra-ui", "@typescript-eslint"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
@@ -32,5 +30,8 @@ module.exports = {
         fixStyle: "inline-type-imports",
       },
     ],
+    "chakra-ui/props-order": "error",
+    "chakra-ui/props-shorthand": "error",
+    "chakra-ui/require-specific-component": "error",
   },
 };

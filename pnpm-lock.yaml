@@ -25,6 +25,7 @@ specifiers:
   eslint: ^8.34.0
   eslint-config-next: ^13.1.6
   eslint-config-prettier: ^8.6.0
+  eslint-plugin-chakra-ui: ^0.7.6
   framer-motion: ^9.1.4
   jotai: ^1.13.1
   next: ^13.1.6
@@ -73,6 +74,7 @@ devDependencies:
   eslint: 8.34.0
   eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
   eslint-config-prettier: 8.6.0_eslint@8.34.0
+  eslint-plugin-chakra-ui: 0.7.6_7kw3g6rralp5ps6mg3uyzz6azm
   prettier: 2.8.3
   prisma: 4.10.1
   tsx: 3.12.3
@@ -3096,6 +3098,19 @@ packages:
       eslint-import-resolver-typescript: 3.5.3_mvgyw3chnqkp6sgfmmtihyjpnm
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /eslint-plugin-chakra-ui/0.7.6_7kw3g6rralp5ps6mg3uyzz6azm:
+    resolution: {integrity: sha512-FyzwmbBsnFBQC3DjSVKciev8R/DIREWtf0Ys4d3tiLlmolrdeqkHd3fzOMkNgLwoUPC19Edt8yrptzOoP75CsQ==}
+    engines: {node: 12.x || 14.x || >= 16, pnpm: '>=7.9.3'}
+    peerDependencies:
+      eslint: '>=6'
+    dependencies:
+      '@typescript-eslint/utils': 5.53.0_7kw3g6rralp5ps6mg3uyzz6azm
+      eslint: 8.34.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: true
 
   /eslint-plugin-import/2.27.5_2hqppaeqs2axgzqg6vttejknky:
