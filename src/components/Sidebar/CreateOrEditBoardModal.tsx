@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { KeyboardEvent } from "react";
 
+import { createBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
 import { CrossIcon } from "~/assets";
 
@@ -33,14 +34,7 @@ const SUBMIT_FORM_BUTTON = {
   EDIT: "Save Changes",
 };
 
-const addTaskSchema = z.object({
-  boardName: z.string().default("Untitled"),
-  boardColumns: z
-    .array(z.object({ title: z.string() }))
-    .max(10)
-    .optional(),
-});
-type FormData = z.infer<typeof addTaskSchema>;
+type FormData = z.infer<typeof createBoardSchema>;
 
 const CreateOrEditBoardModal = ({
   isOpen,
@@ -59,16 +53,16 @@ const CreateOrEditBoardModal = ({
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(addTaskSchema),
+    resolver: zodResolver(createBoardSchema),
     defaultValues: {
-      boardName: "",
-      boardColumns: [{ title: "" }],
+      title: "",
+      columns: [{ title: "" }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "boardColumns",
+    name: "columns",
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
@@ -117,7 +111,7 @@ const CreateOrEditBoardModal = ({
           >
             <FormControl
               borderColor="lightGrayAlpha25"
-              isInvalid={Boolean(errors.boardName)}
+              isInvalid={Boolean(errors.title)}
             >
               <FormLabel htmlFor="title" variant="modal-subtitle">
                 Board Name
@@ -125,15 +119,15 @@ const CreateOrEditBoardModal = ({
               <Input
                 id="title"
                 placeholder="e.g Take coffee break"
-                {...register("boardName")}
+                {...register("title")}
               />
               <FormErrorMessage>
-                {errors.boardName && errors.boardName.message}
+                {errors.title && errors.title.message}
               </FormErrorMessage>
             </FormControl>
             <FormControl
               borderColor="lightGrayAlpha25"
-              isInvalid={Boolean(errors.boardColumns)}
+              isInvalid={Boolean(errors.columns)}
             >
               <FormLabel htmlFor="subtask" variant="modal-subtitle">
                 Board Columns
@@ -163,7 +157,7 @@ const CreateOrEditBoardModal = ({
                 })}
               </Flex>
               <FormErrorMessage>
-                {errors.boardColumns && errors.boardColumns.message}
+                {errors.columns && errors.columns.message}
               </FormErrorMessage>
             </FormControl>
             <Button

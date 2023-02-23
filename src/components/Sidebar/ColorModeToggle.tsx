@@ -7,7 +7,7 @@ import {
 
 import { DarkThemeIcon, LightThemeIcon } from "~/assets";
 
-const ColorToggle = () => {
+const ColorModeToggle = () => {
   const { toggleColorMode } = useColorMode();
   const backgroundColor = useColorModeValue("lighterGray", "lightBlack");
 
@@ -30,4 +30,4 @@ const ColorToggle = () => {
   );
 };
 
-export default ColorToggle;
+export default ColorModeToggle;

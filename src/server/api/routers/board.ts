@@ -1,15 +1,13 @@
-import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createBoardSchema,
+  updateBoardSchema,
+  deleteBoardSchema,
+} from "~/schema/board.schema";
 
 export const boardRouter = createTRPCRouter({
   create: publicProcedure
-    .input(
-      z.object({
-        title: z.string(),
-        columns: z.array(z.object({ title: z.string() })),
-      })
-    )
+    .input(createBoardSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.board.create({
         data: {
@@ -28,13 +26,7 @@ export const boardRouter = createTRPCRouter({
   }),
 
   update: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        columns: z.array(z.object({ id: z.string(), title: z.string() })),
-      })
-    )
+    .input(updateBoardSchema)
     .mutation(({ ctx, input }) => {
       const updateBoardName = ctx.prisma.board.update({
         where: { id: input.id },
@@ -52,7 +44,7 @@ export const boardRouter = createTRPCRouter({
     }),
 
   delete: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(deleteBoardSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.board.delete({
         where: { id: input.id },

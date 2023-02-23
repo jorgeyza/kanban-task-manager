@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { HideSidebarIcon, Logo } from "~/assets";
 
 import AllBoards from "./AllBoards";
-import ColorToggle from "./ColorToggle";
+import ColorModeToggle from "./ColorModeToggle";
 import { drawerAtom } from "~/pages/_app";
 
 const Sidebar = () => {
@@ -38,7 +38,7 @@ const Sidebar = () => {
           <Logo />
         </Box>
         <AllBoards />
-        <ColorToggle />
+        <ColorModeToggle />
         <HideSidebarButton onHideSidebar={handleCloseDrawer} />
       </Flex>
     </>
