@@ -12,7 +12,7 @@ async function main() {
     await prisma.board.deleteMany();
 
     // Create new records
-    for (let board of seedData.boards) {
+    for (const board of seedData.boards) {
       const createdBoard = await prisma.board.create({
         data: {
           title: board.title,
@@ -51,12 +51,12 @@ async function main() {
         `Created board ${createdBoard.title} with ${createdBoard.columns.length} columns`
       );
 
-      for (let column of createdBoard.columns) {
+      for (const column of createdBoard.columns) {
         console.log(
           `Created column ${column.title} with ${column.tasks.length} tasks`
         );
 
-        for (let task of column.tasks) {
+        for (const task of column.tasks) {
           console.log(
             `Created task ${task.title} with ${task.subtasks.length} subtasks`
           );

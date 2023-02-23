@@ -76,20 +76,20 @@ const AddNewTaskModal = ({
 
   return (
     <Modal
+      isCentered
       isOpen={isOpen}
       onClose={onClose}
-      isCentered
       size="lg"
       {...addNewTaskModalDisclosureProps}
     >
       <ModalOverlay />
-      <ModalContent backgroundColor={backgroundColor} padding={8} rowGap={6}>
-        <ModalHeader padding={0}>
+      <ModalContent rowGap={6} p={8} bgColor={backgroundColor}>
+        <ModalHeader p={0}>
           <Heading as="h4" variant="modal-title">
             Add New Task
           </Heading>
         </ModalHeader>
-        <ModalBody display="flex" flexDirection="column" rowGap={6} padding={0}>
+        <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
           <chakra.form
             display="flex"
             flexDirection="column"
@@ -136,10 +136,10 @@ const AddNewTaskModal = ({
                 Subtasks
               </FormLabel>
               <Flex
-                flexDirection="column"
+                direction="column"
                 rowGap={3}
-                maxHeight={250}
                 overflow="auto"
+                maxH={250}
               >
                 {fields.map((subtask, index) => {
                   return (
@@ -163,9 +163,9 @@ const AddNewTaskModal = ({
               </FormErrorMessage>
             </FormControl>
             <Button
-              width="full"
-              variant="secondary"
+              w="full"
               onClick={handleAddNewSubtask}
+              variant="secondary"
             >
               Add New Subtask
             </Button>
@@ -174,9 +174,9 @@ const AddNewTaskModal = ({
                 Status
               </FormLabel>
               <Select
-                iconColor="customPurple.500"
-                borderColor="lightGrayAlpha25"
                 fontSize="13px"
+                borderColor="lightGrayAlpha25"
+                iconColor="customPurple.500"
                 {...register("status")}
               >
                 {TASK_STATUS_ENUM.map((taskStatus) => {
@@ -189,10 +189,10 @@ const AddNewTaskModal = ({
               </Select>
             </FormControl>
             <Button
-              width="full"
-              variant="primary"
+              w="full"
               isLoading={isSubmitting}
               type="submit"
+              variant="primary"
             >
               Create Task
             </Button>

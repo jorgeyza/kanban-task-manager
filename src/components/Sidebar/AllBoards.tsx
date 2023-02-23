@@ -6,68 +6,74 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 import { BoardIcon } from "~/assets";
+import { type HTMLProps } from "~/types";
+import { api } from "~/utils/api";
 import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
-
-const boards = ["Platform Launch", "Marketing Plan", "Roadmap"];
 
 const AllBoards = () => {
   const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");
 
-  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
+  const { isOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
-  const createNewBoardButtonProps = getButtonProps();
+  const createNewBoardButtonProps = getButtonProps() as HTMLProps;
+
+  const [selectedBoard, setSelectedBoard] = useState("");
+  console.log(
+    "🚀 ~ file: AllBoards.tsx:24 ~ AllBoards ~ selectedBoard:",
+    selectedBoard
+  );
+
+  const { data: allBoards } = api.board.getAll.useQuery();
+
   return (
     <div>
-      <Heading paddingLeft={6} marginBottom={5} variant="board-column-title">
+      <Heading mb={5} pl={6} variant="board-column-title">
         all boards {`(${8})`}
       </Heading>
       <List as="nav" role="navigation">
-        {boards.map((board) => {
+        {allBoards?.map((board) => {
           return (
             <ListItem
-              key={board}
-              display="flex"
-              position="relative"
+              key={board.id}
+              pos="relative"
               alignItems="center"
-              height="48px"
               columnGap={4}
-              paddingX={6}
-              marginRight={6}
+              display="flex"
+              h="48px"
+              mr={6}
+              px={6}
               borderRightRadius="full"
-              cursor="pointer"
               _hover={{
                 backgroundColor: hoverBackgroundColor,
                 color: "customPurple.500",
               }}
+              cursor="pointer"
+              onClick={() => setSelectedBoard(board.id)}
             >
               <BoardIcon />
-              <Text variant="boards-list">{board}</Text>
+              <Text variant="boards-list">{board.title}</Text>
             </ListItem>
           );
         })}
         <ListItem
-          display="flex"
-          position="relative"
+          pos="relative"
           alignItems="center"
-          color="customPurple.500"
-          height="48px"
           columnGap={4}
-          paddingX={6}
-          marginRight={6}
+          display="flex"
+          h="48px"
+          mr={6}
+          px={6}
+          color="customPurple.500"
           borderRightRadius="full"
-          cursor="pointer"
           _hover={{ backgroundColor: hoverBackgroundColor }}
+          cursor="pointer"
+          {...createNewBoardButtonProps}
         >
           <BoardIcon />
-          <Text
-            variant="boards-list"
-            onClick={onOpen}
-            {...createNewBoardButtonProps}
-          >
-            + Create New Board
-          </Text>
+          <Text variant="boards-list">+ Create New Board</Text>
         </ListItem>
       </List>
       <CreateOrEditBoardModal

@@ -22,19 +22,19 @@ const Sidebar = () => {
     <>
       <Flex
         as="aside"
-        flexDirection="column"
-        height="100vh"
-        minWidth={isDrawerOpen ? 300 : 0}
-        width={0}
-        paddingY={8}
-        borderRight="1px solid"
-        borderColor={sidebarBorderColor}
-        backgroundColor={sidebarBackgroundColor}
+        direction="column"
         overflow="hidden"
+        w={0}
+        minW={isDrawerOpen ? 300 : 0}
+        h="100vh"
+        py={8}
+        borderColor={sidebarBorderColor}
+        borderRight="1px solid"
         transition="all .5s cubic-bezier(0.820, 0.085, 0.395, 0.895)"
+        bgColor={sidebarBackgroundColor}
         data-test="sidebar"
       >
-        <Box marginBottom={54} paddingX={6} color={LogoColor}>
+        <Box mb={54} px={6} color={LogoColor}>
           <Logo />
         </Box>
         <AllBoards />
@@ -55,19 +55,19 @@ const HideSidebarButton = ({
   const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");
   return (
     <Flex
-      display="flex"
-      position="relative"
-      alignItems="center"
-      height="48px"
+      pos="relative"
+      align="center"
       columnGap={4}
-      paddingX={6}
-      marginRight={6}
+      display="flex"
+      h="48px"
+      mr={6}
+      px={6}
       borderRightRadius="full"
-      cursor="pointer"
       _hover={{
         backgroundColor: hoverBackgroundColor,
         color: "customPurple.500",
       }}
+      cursor="pointer"
       onClick={onHideSidebar}
     >
       <HideSidebarIcon />

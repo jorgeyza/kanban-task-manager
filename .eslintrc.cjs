@@ -33,5 +33,15 @@ module.exports = {
     "chakra-ui/props-order": "error",
     "chakra-ui/props-shorthand": "error",
     "chakra-ui/require-specific-component": "error",
+
+    // https://github.com/react-hook-form/react-hook-form/discussions/8020#discussioncomment-5073364
+    "@typescript-eslint/no-misused-promises": [
+      2,
+      {
+        checksVoidReturn: {
+          attributes: false,
+        },
+      },
+    ],
   },
 };

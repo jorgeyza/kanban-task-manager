@@ -8,6 +8,8 @@ import {
 import Column from "./Column";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
+import { type HTMLProps } from "~/types";
+
 const Board = () => {
   const newColumnBackgroundColor = useColorModeValue("lightGray", "darkerGray");
   const newColumnHoverBackgroundColor = useColorModeValue(
@@ -17,30 +19,24 @@ const Board = () => {
 
   const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
-  const createOrEditBoardButtonProps = getButtonProps();
+  const createOrEditBoardButtonProps = getButtonProps() as HTMLProps;
 
   return (
-    <Flex
-      columnGap={6}
-      paddingBottom={8}
-      overflow="auto"
-      flexGrow={1}
-      data-test="board"
-    >
+    <Flex flexGrow={1} columnGap={6} overflow="auto" pb={8} data-test="board">
       <Column />
       <Column />
       <Column />
       <Center
         as="button"
-        minWidth="280px"
-        height="90%"
-        marginTop="34px"
-        borderRadius={8}
+        minW="280px"
+        h="90%"
+        mt="34px"
+        color="customPurple.500"
         fontSize="24px"
         fontWeight="bold"
-        color="customPurple.500"
-        backgroundColor={newColumnBackgroundColor}
+        borderRadius={8}
         _hover={{ backgroundColor: newColumnHoverBackgroundColor }}
+        bgColor={newColumnBackgroundColor}
         onClick={onOpen}
         {...createOrEditBoardButtonProps}
       >

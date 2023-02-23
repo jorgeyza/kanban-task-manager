@@ -16,12 +16,12 @@ const ColorModeToggle = () => {
       alignItems="center"
       justifyContent="center"
       gap={2}
-      paddingY={3}
-      marginTop="auto"
+      mt="auto"
+      mb={2}
+      py={3}
+      bgColor={backgroundColor}
       marginX={6}
-      marginBottom={2}
       rounded={8}
-      backgroundColor={backgroundColor}
     >
       <LightThemeIcon />
       <Switch onChange={toggleColorMode} />

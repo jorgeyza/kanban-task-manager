@@ -17,8 +17,8 @@ import {
 } from "@chakra-ui/react";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { KeyboardEvent } from "react";
+import type * as z from "zod";
+import { type KeyboardEvent } from "react";
 
 import { createBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
@@ -65,7 +65,12 @@ const CreateOrEditBoardModal = ({
     name: "columns",
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = (data) =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(console.log(data));
+      }, 300)
+    );
 
   const handleAddNewBoardColumn = () => {
     append({ title: "" });
@@ -89,24 +94,25 @@ const CreateOrEditBoardModal = ({
 
   return (
     <Modal
+      isCentered
       isOpen={isOpen}
       onClose={onClose}
-      isCentered
       size="lg"
       {...createOrEditBoardModalDisclosureProps}
     >
       <ModalOverlay />
-      <ModalContent backgroundColor={backgroundColor} padding={8} rowGap={6}>
-        <ModalHeader padding={0}>
+      <ModalContent rowGap={6} p={8} bgColor={backgroundColor}>
+        <ModalHeader p={0}>
           <Heading as="h4" variant="modal-title">
             {MODAL_HEADER[action]}
           </Heading>
         </ModalHeader>
-        <ModalBody display="flex" flexDirection="column" rowGap={6} padding={0}>
+        <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
           <chakra.form
             display="flex"
             flexDirection="column"
             rowGap={6}
+            // https://github.com/react-hook-form/react-hook-form/discussions/8020
             onSubmit={handleSubmit(onSubmit)}
           >
             <FormControl
@@ -132,18 +138,13 @@ const CreateOrEditBoardModal = ({
               <FormLabel htmlFor="subtask" variant="modal-subtitle">
                 Board Columns
               </FormLabel>
-              <Flex
-                flexDirection="column"
-                rowGap={3}
-                maxHeight={250}
-                overflow="auto"
-              >
+              <Flex direction="column" rowGap={3} overflow="auto" maxH={250}>
                 {fields.map((boardColumn, index) => {
                   return (
                     <Flex key={boardColumn.id} columnGap={4}>
                       <Input
-                        placeholder="e.g Todo"
                         onKeyDown={(event) => handleOnKeyDown(event, index)}
+                        placeholder="e.g Todo"
                         {...register(`columns.${index}.title` as const)}
                       />
                       <Center
@@ -161,17 +162,17 @@ const CreateOrEditBoardModal = ({
               </FormErrorMessage>
             </FormControl>
             <Button
-              width="full"
-              variant="secondary"
+              w="full"
               onClick={handleAddNewBoardColumn}
+              variant="secondary"
             >
               Add New Column
             </Button>
             <Button
-              width="full"
-              variant="primary"
+              w="full"
               isLoading={isSubmitting}
               type="submit"
+              variant="primary"
             >
               {SUBMIT_FORM_BUTTON[action]}
             </Button>

@@ -8,27 +8,29 @@ import {
 
 import TaskModal from "./TaskModal";
 
+import { type HTMLProps } from "~/types";
+
 const Task = () => {
   const taskBackgroundColor = useColorModeValue("white", "darkerGray");
   const taskHoverBackgroundColor = useColorModeValue("whiteSoft", "darkGray");
   const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
 
-  const taskModalButtonProps = getButtonProps();
+  const taskModalButtonProps = getButtonProps() as HTMLProps;
 
   return (
     <>
       <Flex
         as="button"
-        flexDirection="column"
+        direction="column"
         rowGap={2}
-        paddingX={6}
-        paddingY={4}
-        width="280px"
+        w="280px"
+        px={6}
+        py={4}
         borderRadius={8}
-        backgroundColor={taskBackgroundColor}
-        cursor="pointer"
         _hover={{ backgroundColor: taskHoverBackgroundColor }}
+        cursor="pointer"
+        bgColor={taskBackgroundColor}
         onClick={onOpen}
         {...taskModalButtonProps}
       >

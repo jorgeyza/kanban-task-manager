@@ -4,13 +4,13 @@ import Task from "./Task";
 
 const Column = () => {
   return (
-    <Flex flexDirection="column" rowGap={5} width={280}>
+    <Flex direction="column" rowGap={5} w={280}>
       <Flex columnGap={3}>
         <Box
-          height="15px"
-          width="15px"
+          w="15px"
+          h="15px"
           borderRadius="50%"
-          backgroundColor="#49c4e5"
+          bgColor="#49c4e5"
         />
         <Heading variant="board-column-title">TO DO</Heading>
       </Flex>

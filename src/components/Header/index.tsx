@@ -19,6 +19,8 @@ import { drawerAtom } from "~/pages/_app";
 import AddNewTaskModal from "./AddNewTaskModal";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
+import { type HTMLProps } from "~/types";
+
 const Header = () => {
   const borderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
   const backgroundColor = useColorModeValue("white", "darkerGray");
@@ -35,7 +37,8 @@ const Header = () => {
     getButtonProps: addNewTaskModalGetButtonProps,
     getDisclosureProps: addNewTaskModalGetDisclosureProps,
   } = useDisclosure();
-  const addNewTaskModalButtonProps = addNewTaskModalGetButtonProps();
+  const addNewTaskModalButtonProps =
+    addNewTaskModalGetButtonProps() as HTMLProps;
 
   const {
     isOpen: createOrEditBoardModalIsOpen,
@@ -45,43 +48,43 @@ const Header = () => {
     getDisclosureProps: createOrEditBoardModalGetDisclosureProps,
   } = useDisclosure();
   const createOrEditBoardModalButtonProps =
-    createOrEditBoardModalGetButtonProps();
+    createOrEditBoardModalGetButtonProps() as HTMLProps;
 
   return (
     <>
       <Flex
         as="header"
-        backgroundColor={backgroundColor}
-        justifyContent="space-between"
-        height="97px"
-        alignItems="center"
-        paddingX={5}
-        borderBottomColor={borderColor}
+        align="center"
+        justify="space-between"
+        h="97px"
+        px={5}
         borderBottomWidth="thin"
+        borderBottomColor={borderColor}
+        bgColor={backgroundColor}
       >
-        <Flex height="100%" columnGap={6} alignItems="center">
+        <Flex align="center" columnGap={6} h="100%">
           {!isDrawerOpen && (
             <Center
-              paddingRight={6}
-              height="100%"
-              paddingLeft={1}
-              borderRight="1px solid"
-              borderColor={logoBorderColor}
+              h="100%"
+              pr={6}
+              pl={1}
               color={logoColor}
+              borderColor={logoBorderColor}
+              borderRight="1px solid"
             >
               <Logo />
             </Center>
           )}
-          <Heading as="h1" size="md" color={headingColor}>
+          <Heading as="h1" color={headingColor} size="md">
             Platform Launch
           </Heading>
         </Flex>
-        <Flex alignItems="center" columnGap={6}>
+        <Flex align="center" columnGap={6}>
           <Button
-            variant="primary"
-            size="lg"
-            backgroundColor="customPurple.500"
+            bgColor="customPurple.500"
             onClick={addNewTaskModalOnOpen}
+            size="lg"
+            variant="primary"
             {...addNewTaskModalButtonProps}
           >
             + Add New Task

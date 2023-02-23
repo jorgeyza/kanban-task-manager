@@ -11,23 +11,23 @@ const Layout = ({
   className: string;
 }) => {
   return (
-    <Flex overflow="hidden" data-test="app-layout" className={className}>
+    <Flex className={className} overflow="hidden" data-test="app-layout">
       <Sidebar />
       <Flex
-        flexDirection="column"
-        width="full"
+        direction="column"
         overflow="auto"
+        w="full"
         data-test="right-side"
       >
         <Header />
         <Flex
           as="main"
+          align="flex-start"
+          direction="column"
           flexGrow={1}
-          flexDirection="column"
-          alignItems="flex-start"
           rowGap={4}
-          padding={6}
           overflow="auto"
+          p={6}
           data-test="main-container"
         >
           {children}
