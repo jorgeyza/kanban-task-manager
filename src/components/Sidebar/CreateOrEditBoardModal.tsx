@@ -18,6 +18,7 @@ import {
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { KeyboardEvent } from "react";
 
 import type { DynamicChakraModalProps } from "~/types";
 import { CrossIcon } from "~/assets";
@@ -54,6 +55,7 @@ const CreateOrEditBoardModal = ({
   const {
     handleSubmit,
     register,
+    getValues,
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
@@ -77,6 +79,18 @@ const CreateOrEditBoardModal = ({
 
   const handleDeleteBoardColumn = (index: number) => {
     remove(index);
+  };
+
+  const handleOnKeyDown = (
+    event: KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (
+      event.key === "Enter" &&
+      getValues(`columns.${index}.title`).length > 0
+    ) {
+      handleAddNewBoardColumn();
+    }
   };
 
   return (
@@ -135,7 +149,8 @@ const CreateOrEditBoardModal = ({
                     <Flex key={boardColumn.id} columnGap={4}>
                       <Input
                         placeholder="e.g Todo"
-                        {...register(`boardColumns.${index}.title` as const)}
+                        onKeyDown={(event) => handleOnKeyDown(event, index)}
+                        {...register(`columns.${index}.title` as const)}
                       />
                       <Center
                         cursor="pointer"
