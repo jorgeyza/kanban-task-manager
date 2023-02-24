@@ -1,5 +1,7 @@
 # Kanban Task Management
 
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=kanban-task-management)
+
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`. UI design by [Frontend Mentor](https://www.frontendmentor.io/)
 
 Web app for task management. Used PlanetScale for the database(MySQL-compatible). Users are able to:
