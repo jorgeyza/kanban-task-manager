@@ -15,11 +15,13 @@ import { useAtom } from "jotai";
 
 import { Logo, VerticalEllipsisIcon } from "~/assets";
 import { drawerAtom } from "~/pages/_app";
+import { selectedBoardIdAtom } from "~/pages/_app";
 
 import AddNewTaskModal from "./AddNewTaskModal";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
+import { api } from "~/utils/api";
 
 const Header = () => {
   const borderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
@@ -29,6 +31,9 @@ const Header = () => {
   const logoBorderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
 
   const [isDrawerOpen] = useAtom(drawerAtom);
+  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const { data: oneBoard } = api.board.getOne.useQuery({ id: selectedBoardId });
 
   const {
     isOpen: addNewTaskModalIsOpen,
@@ -76,7 +81,7 @@ const Header = () => {
             </Center>
           )}
           <Heading as="h1" color={headingColor} size="md">
-            Platform Launch
+            {oneBoard?.title}
           </Heading>
         </Flex>
         <Flex align="center" columnGap={6}>
