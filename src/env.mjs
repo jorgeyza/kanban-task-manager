@@ -28,7 +28,6 @@ const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
-console.log("🚀 ~ file: env.mjs:31 ~ processEnv:", processEnv);
 
 // Don't touch the part below
 // --------------------------
@@ -49,7 +48,6 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
       ? merged.safeParse(processEnv) // on server we can validate all env vars
       : client.safeParse(processEnv) // on client we can only validate the ones that are exposed
   );
-  console.log("🚀 ~ file: env.mjs:47 ~ parsed:", parsed);
 
   if (parsed.success === false) {
     console.error(
