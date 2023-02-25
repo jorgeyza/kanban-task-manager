@@ -22,10 +22,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { TASK_STATUS_ENUM } from "~/constants";
-import type { ChakraModalProps } from "~/types";
 import { CrossIcon } from "~/assets";
 
-const addTaskSchema = z.object({
+import { type DynamicChakraModalProps } from "~/types";
+
+const MODAL_HEADER = {
+  CREATE: "Add New Task",
+  EDIT: "Edit Task",
+};
+
+const SUBMIT_FORM_BUTTON = {
+  CREATE: "Edit Task",
+  EDIT: "Save Changes",
+};
+
+const createTaskSchema = z.object({
   title: z.string().default("Untitled"),
   description: z.string().optional(),
   subtasks: z
@@ -35,16 +46,17 @@ const addTaskSchema = z.object({
   status: z.enum(TASK_STATUS_ENUM),
 });
 
-type FormData = z.infer<typeof addTaskSchema>;
+type FormData = z.infer<typeof createTaskSchema>;
 
-const AddNewTaskModal = ({
+const CreateOrEditTaskModal = ({
   isOpen,
   onClose,
   getDisclosureProps,
-}: ChakraModalProps) => {
+  action,
+}: DynamicChakraModalProps) => {
   const backgroundColor = useColorModeValue("white", "darkerGray");
 
-  const addNewTaskModalDisclosureProps = getDisclosureProps();
+  const createOrEditTaskModalDisclosureProps = getDisclosureProps();
 
   const {
     handleSubmit,
@@ -52,7 +64,7 @@ const AddNewTaskModal = ({
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(addTaskSchema),
+    resolver: zodResolver(createTaskSchema),
     defaultValues: {
       subtasks: [{ title: "" }],
       status: "To do",
@@ -80,13 +92,13 @@ const AddNewTaskModal = ({
       isOpen={isOpen}
       onClose={onClose}
       size="lg"
-      {...addNewTaskModalDisclosureProps}
+      {...createOrEditTaskModalDisclosureProps}
     >
       <ModalOverlay />
       <ModalContent rowGap={6} p={8} bgColor={backgroundColor}>
         <ModalHeader p={0}>
           <Heading as="h4" variant="modal-title">
-            Add New Task
+            {MODAL_HEADER[action]}
           </Heading>
         </ModalHeader>
         <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
@@ -135,12 +147,7 @@ const AddNewTaskModal = ({
               <FormLabel htmlFor="subtask" variant="modal-subtitle">
                 Subtasks
               </FormLabel>
-              <Flex
-                direction="column"
-                rowGap={3}
-                overflow="auto"
-                maxH={250}
-              >
+              <Flex direction="column" rowGap={3} overflow="auto" maxH={250}>
                 {fields.map((subtask, index) => {
                   return (
                     <Flex key={subtask.id} columnGap={4}>
@@ -162,11 +169,7 @@ const AddNewTaskModal = ({
                 {errors.subtasks && errors.subtasks.message}
               </FormErrorMessage>
             </FormControl>
-            <Button
-              w="full"
-              onClick={handleAddNewSubtask}
-              variant="secondary"
-            >
+            <Button w="full" onClick={handleAddNewSubtask} variant="secondary">
               Add New Subtask
             </Button>
             <FormControl isInvalid={Boolean(errors.status)}>
@@ -194,7 +197,7 @@ const AddNewTaskModal = ({
               type="submit"
               variant="primary"
             >
-              Create Task
+              {SUBMIT_FORM_BUTTON[action]}
             </Button>
           </chakra.form>
         </ModalBody>
@@ -203,4 +206,4 @@ const AddNewTaskModal = ({
   );
 };
 
-export default AddNewTaskModal;
+export default CreateOrEditTaskModal;

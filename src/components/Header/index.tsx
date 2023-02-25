@@ -17,7 +17,7 @@ import { Logo, VerticalEllipsisIcon } from "~/assets";
 import { drawerAtom } from "~/pages/_app";
 import { selectedBoardIdAtom } from "~/pages/_app";
 
-import AddNewTaskModal from "./AddNewTaskModal";
+import CreateOrEditTaskModal from "./CreateOrEditTaskModal";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
@@ -38,14 +38,14 @@ const Header = () => {
   });
 
   const {
-    isOpen: addNewTaskModalIsOpen,
-    onOpen: addNewTaskModalOnOpen,
-    onClose: addNewTaskModalOnClose,
-    getButtonProps: addNewTaskModalGetButtonProps,
-    getDisclosureProps: addNewTaskModalGetDisclosureProps,
+    isOpen: createOrEditTaskModalIsOpen,
+    onOpen: createOrEditTaskModalOnOpen,
+    onClose: createOrEditTaskModalOnClose,
+    getButtonProps: createOrEditTaskModalGetButtonProps,
+    getDisclosureProps: createOrEditTaskModalGetDisclosureProps,
   } = useDisclosure();
-  const addNewTaskModalButtonProps =
-    addNewTaskModalGetButtonProps() as HTMLProps;
+  const createOrEditTaskModalButtonProps =
+    createOrEditTaskModalGetButtonProps() as HTMLProps;
 
   const {
     isOpen: createOrEditBoardModalIsOpen,
@@ -89,10 +89,10 @@ const Header = () => {
         <Flex align="center" columnGap={6}>
           <Button
             bgColor="customPurple.500"
-            onClick={addNewTaskModalOnOpen}
+            onClick={createOrEditTaskModalOnOpen}
             size="lg"
             variant="primary"
-            {...addNewTaskModalButtonProps}
+            {...createOrEditTaskModalButtonProps}
           >
             + Add New Task
           </Button>
@@ -112,10 +112,11 @@ const Header = () => {
           </Menu>
         </Flex>
       </Flex>
-      <AddNewTaskModal
-        isOpen={addNewTaskModalIsOpen}
-        onClose={addNewTaskModalOnClose}
-        getDisclosureProps={addNewTaskModalGetDisclosureProps}
+      <CreateOrEditTaskModal
+        isOpen={createOrEditTaskModalIsOpen}
+        onClose={createOrEditTaskModalOnClose}
+        getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
+        action="CREATE"
       />
       <CreateOrEditBoardModal
         isOpen={createOrEditBoardModalIsOpen}
