@@ -18,7 +18,7 @@ model Task {
   title       String
   description String
   subtasks    Subtask[]
-  column      Column    @relation(fields: [columnId], references: [id])
+  column      Column    @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId    String
 
   @@index([columnId])
@@ -30,7 +30,7 @@ model Subtask {
   updatedAt DateTime @updatedAt
   title     String
   isDone    Boolean
-  task      Task     @relation(fields: [taskId], references: [id])
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId    String
 
   @@index([taskId])
@@ -42,7 +42,7 @@ model Column {
   updatedAt DateTime @updatedAt
   title     String
   tasks     Task[]
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId   String
 
   @@index([boardId])

@@ -30,13 +30,6 @@ const Header = () => {
   const logoColor = useColorModeValue("black", "white");
   const logoBorderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
 
-  const [isDrawerOpen] = useAtom(drawerAtom);
-  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
-
-  const { data: selectedBoard } = api.board.getOne.useQuery({
-    id: selectedBoardId,
-  });
-
   const {
     isOpen: createOrEditTaskModalIsOpen,
     onOpen: createOrEditTaskModalOnOpen,
@@ -56,6 +49,33 @@ const Header = () => {
   } = useDisclosure();
   const createOrEditBoardModalButtonProps =
     createOrEditBoardModalGetButtonProps() as HTMLProps;
+
+  const [isDrawerOpen] = useAtom(drawerAtom);
+  const [selectedBoardId, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const { data: selectedBoard } = api.board.getOne.useQuery({
+    id: selectedBoardId,
+  });
+
+  const { data: allBoards, refetch: refetchAllBoards } =
+    api.board.getAll.useQuery();
+
+  const deleteBoard = api.board.delete.useMutation({
+    onSuccess: async () => {
+      await refetchAllBoards();
+    },
+  });
+
+  const handleDeleteBoard = () => {
+    deleteBoard.mutate(
+      { id: selectedBoardId },
+      {
+        onSuccess: () => {
+          setSelectedBoardId(allBoards?.at(-1)?.id ?? "");
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -107,7 +127,9 @@ const Header = () => {
               >
                 Edit Board
               </MenuItem>
-              <MenuItem color="customRed">Delete Board</MenuItem>
+              <MenuItem color="customRed" onClick={handleDeleteBoard}>
+                Delete Board
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>
