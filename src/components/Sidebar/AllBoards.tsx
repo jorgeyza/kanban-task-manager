@@ -6,11 +6,14 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
 
 import { BoardIcon } from "~/assets";
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
+import { selectedBoardIdAtom } from "~/pages/_app";
+
 import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 const AllBoards = () => {
@@ -20,18 +23,19 @@ const AllBoards = () => {
     useDisclosure();
   const createNewBoardButtonProps = getButtonProps() as HTMLProps;
 
-  const [selectedBoard, setSelectedBoard] = useState("");
-  console.log(
-    "🚀 ~ file: AllBoards.tsx:24 ~ AllBoards ~ selectedBoard:",
-    selectedBoard
-  );
+  const [selectedBoardId, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
 
   const { data: allBoards } = api.board.getAll.useQuery();
 
+  useEffect(() => {
+    if (selectedBoardId === "" && allBoards?.[0]) {
+      setSelectedBoardId(allBoards[0].id);
+    }
+  }, [allBoards, selectedBoardId, setSelectedBoardId]);
   return (
     <div>
       <Heading mb={5} pl={6} variant="board-column-title">
-        all boards {`(${8})`}
+        all boards ({allBoards?.length ?? 0})
       </Heading>
       <List as="nav" role="navigation">
         {allBoards?.map((board) => {
@@ -45,13 +49,21 @@ const AllBoards = () => {
               h="48px"
               mr={6}
               px={6}
+              color={selectedBoardId === board.id ? "white" : undefined}
               borderRightRadius="full"
-              _hover={{
-                backgroundColor: hoverBackgroundColor,
-                color: "customPurple.500",
-              }}
+              _hover={
+                selectedBoardId === board.id
+                  ? undefined
+                  : {
+                      backgroundColor: hoverBackgroundColor,
+                      color: "customPurple.500",
+                    }
+              }
               cursor="pointer"
-              onClick={() => setSelectedBoard(board.id)}
+              bgColor={
+                selectedBoardId === board.id ? "customPurple.500" : undefined
+              }
+              onClick={() => setSelectedBoardId(board.id)}
             >
               <BoardIcon />
               <Text variant="boards-list">{board.title}</Text>
