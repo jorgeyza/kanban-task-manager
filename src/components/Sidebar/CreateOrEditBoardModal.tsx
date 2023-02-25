@@ -18,11 +18,14 @@ import {
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type * as z from "zod";
-import { type KeyboardEvent } from "react";
+import { useEffect, type KeyboardEvent } from "react";
+import { useAtom } from "jotai";
 
+import { selectedBoardIdAtom } from "~/pages/_app";
 import { createBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
 import { CrossIcon } from "~/assets";
+import { api } from "~/utils/api";
 
 const MODAL_HEADER = {
   CREATE: "Create New Board",
@@ -49,9 +52,10 @@ const CreateOrEditBoardModal = ({
   const {
     handleSubmit,
     register,
+    reset,
     getValues,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     resolver: zodResolver(createBoardSchema),
     defaultValues: {
@@ -65,12 +69,38 @@ const CreateOrEditBoardModal = ({
     name: "columns",
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) =>
-    new Promise((resolve) =>
-      setTimeout(() => {
-        resolve(console.log(data));
-      }, 300)
+  const { refetch: refetchBoards } = api.board.getAll.useQuery();
+
+  const createBoard = api.board.create.useMutation({
+    onSuccess: async () => {
+      await refetchBoards();
+    },
+  });
+
+  const [, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    // Prevent submit if I am focusing on adding new columns
+    if (document.activeElement?.id.startsWith("field")) {
+      return;
+    }
+
+    const columns = data.columns.map((column) =>
+      column.title === "" ? { title: "Untitled" } : { title: column.title }
     );
+    return createBoard.mutate(
+      {
+        title: data.title,
+        columns,
+      },
+      {
+        onSuccess(data) {
+          setSelectedBoardId(data.id);
+          return onClose();
+        },
+      }
+    );
+  };
 
   const handleAddNewBoardColumn = () => {
     append({ title: "" });
@@ -91,6 +121,10 @@ const CreateOrEditBoardModal = ({
       handleAddNewBoardColumn();
     }
   };
+
+  useEffect(() => {
+    reset();
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <Modal
