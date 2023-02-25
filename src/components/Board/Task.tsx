@@ -53,11 +53,15 @@ const Task = ({ id }: Props) => {
           allSubtasks?.filter((subtask) => subtask.isDone).length ?? 0
         } of ${allSubtasks?.length ?? 0} subtasks`}</Text>
       </Flex>
-      <TaskModal
-        isOpen={isOpen}
-        onClose={onClose}
-        getDisclosureProps={getDisclosureProps}
-      />
+      {task && allSubtasks && (
+        <TaskModal
+          isOpen={isOpen}
+          onClose={onClose}
+          getDisclosureProps={getDisclosureProps}
+          task={task}
+          subtasks={allSubtasks}
+        />
+      )}
     </>
   );
 };

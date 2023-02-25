@@ -14,16 +14,29 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 
 import { VerticalEllipsisIcon } from "~/assets";
-import { TASK_STATUS_ENUM } from "~/constants";
+import { selectedBoardIdAtom } from "~/pages/_app";
+import { api, type RouterOutputs } from "~/utils/api";
+
 import type { ChakraModalProps } from "~/types";
+
+type Task = RouterOutputs["task"]["getAllByColumnId"][0];
+type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
+
+interface Props extends ChakraModalProps {
+  task: Task;
+  subtasks: Subtask[];
+}
 
 const TaskModal = ({
   isOpen,
   onClose,
   getDisclosureProps,
-}: ChakraModalProps) => {
+  task,
+  subtasks,
+}: Props) => {
   const taskBackgroundColor = useColorModeValue("white", "darkerGray");
   const checkboxBackgroundColor = useColorModeValue(
     "lighterGray",
@@ -32,19 +45,20 @@ const TaskModal = ({
 
   const taskModalDisclosureProps = getDisclosureProps();
 
+  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const { data: selectedBoard } = api.board.getOne.useQuery({
+    id: selectedBoardId,
+  });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} {...taskModalDisclosureProps}>
       <ModalOverlay />
-      <ModalContent
-        rowGap={6}
-        p={8}
-        bgColor={taskBackgroundColor}
-      >
+      <ModalContent rowGap={6} p={8} bgColor={taskBackgroundColor}>
         <ModalHeader p={0}>
           <Flex justify="space-between">
             <Heading as="h4" variant="modal-title">
-              Create paper prototypes and conduct 10 usability tests with
-              potential customers
+              {task?.title}
             </Heading>
             <Box flexShrink={0} cursor="pointer">
               <VerticalEllipsisIcon />
@@ -53,51 +67,28 @@ const TaskModal = ({
         </ModalHeader>
         <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
           <Text as="p" variant="basic-text">
-            some description goes here lalala alala alalalalalala allalaa al
-            allaa some-tlaas-dfdfssd
+            {task?.description}
           </Text>
           <Flex direction="column" rowGap={4}>
             <Heading as="h5" variant="modal-subtitle">
-              Subtasks (2 of 2)
+              {`Subtasks (${
+                subtasks.filter((subtask) => subtask.isDone).length
+              } of ${subtasks.length})`}
             </Heading>
-            <CheckboxGroup
-              colorScheme="customPurple"
-              defaultValue={["naruto", "kakashi"]}
-            >
+            <CheckboxGroup colorScheme="customPurple">
               <VStack alignItems="start" spacing={2}>
-                <Checkbox
-                  w="full"
-                  p={3}
-                  borderRadius={4}
-                  bgColor={checkboxBackgroundColor}
-                  value="naruto"
-                >
-                  <Text variant="modal-checkbox">
-                    Meet to review notes from previous tests and plan changes
-                  </Text>
-                </Checkbox>
-                <Checkbox
-                  w="full"
-                  p={3}
-                  borderRadius={4}
-                  bgColor={checkboxBackgroundColor}
-                  value="sasuke"
-                >
-                  <Text variant="modal-checkbox">
-                    Make changes to paper prototypes
-                  </Text>
-                </Checkbox>
-                <Checkbox
-                  w="full"
-                  p={3}
-                  borderRadius={4}
-                  bgColor={checkboxBackgroundColor}
-                  value="kakashi"
-                >
-                  <Text variant="modal-checkbox">
-                    Conduct 5 usability tests
-                  </Text>
-                </Checkbox>
+                {subtasks.map((subtask) => (
+                  <Checkbox
+                    key={subtask.id}
+                    w="full"
+                    p={3}
+                    borderRadius={4}
+                    bgColor={checkboxBackgroundColor}
+                    value="naruto"
+                  >
+                    <Text variant="modal-checkbox">{subtask.title}</Text>
+                  </Checkbox>
+                ))}
               </VStack>
             </CheckboxGroup>
           </Flex>
@@ -111,10 +102,10 @@ const TaskModal = ({
               iconColor="customPurple.500"
               placeholder="Select option"
             >
-              {TASK_STATUS_ENUM.map((taskStatus) => {
+              {selectedBoard?.columns.map((column) => {
                 return (
-                  <option key={taskStatus} value={taskStatus}>
-                    {taskStatus}
+                  <option key={column.id} value={column.title}>
+                    {column.title}
                   </option>
                 );
               })}
