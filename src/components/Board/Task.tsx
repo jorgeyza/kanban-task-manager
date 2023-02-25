@@ -9,14 +9,26 @@ import {
 import TaskModal from "./TaskModal";
 
 import { type HTMLProps } from "~/types";
+import { api } from "~/utils/api";
 
-const Task = () => {
+interface Props {
+  id: string;
+}
+
+const Task = ({ id }: Props) => {
   const taskBackgroundColor = useColorModeValue("white", "darkerGray");
   const taskHoverBackgroundColor = useColorModeValue("whiteSoft", "darkGray");
   const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
 
   const taskModalButtonProps = getButtonProps() as HTMLProps;
+
+  const { data: task } = api.task.getOne.useQuery({
+    id,
+  });
+  const { data: allSubtasks } = api.subtask.getAllByTaskId.useQuery({
+    taskId: id,
+  });
 
   return (
     <>
@@ -35,10 +47,11 @@ const Task = () => {
         {...taskModalButtonProps}
       >
         <Heading as="h3" variant="task-heading">
-          Create paper prototypes and conduct 10 usability tests with potential
-          customers
+          {task?.title}
         </Heading>
-        <Text variant="basic-text">1 of 3 subtasks</Text>
+        <Text variant="basic-text">{`${
+          allSubtasks?.filter((subtask) => subtask.isDone).length ?? 0
+        } of ${allSubtasks?.length ?? 0} subtasks`}</Text>
       </Flex>
       <TaskModal
         isOpen={isOpen}

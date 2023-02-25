@@ -28,6 +28,9 @@ export const boardRouter = createTRPCRouter({
   getOne: publicProcedure.input(deleteBoardSchema).query(({ ctx, input }) => {
     return ctx.prisma.board.findFirst({
       where: { id: input.id },
+      include: {
+        columns: true,
+      },
     });
   }),
 

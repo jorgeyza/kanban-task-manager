@@ -4,11 +4,15 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useAtom } from "jotai";
+
+import { selectedBoardIdAtom } from "~/pages/_app";
 
 import Column from "./Column";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
+import { api } from "~/utils/api";
 
 const Board = () => {
   const newColumnBackgroundColor = useColorModeValue("lightGray", "darkerGray");
@@ -21,11 +25,21 @@ const Board = () => {
     useDisclosure();
   const createOrEditBoardButtonProps = getButtonProps() as HTMLProps;
 
+  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const { data: selectedBoard } = api.board.getOne.useQuery({
+    id: selectedBoardId,
+  });
+
   return (
     <Flex flexGrow={1} columnGap={6} overflow="auto" pb={8} data-test="board">
-      <Column />
-      <Column />
-      <Column />
+      {selectedBoard?.columns.map((columnData) => (
+        <Column
+          key={columnData.id}
+          id={columnData.id}
+          title={columnData.title}
+        />
+      ))}
       <Center
         as="button"
         minW="280px"

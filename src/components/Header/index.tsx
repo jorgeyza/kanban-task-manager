@@ -33,7 +33,9 @@ const Header = () => {
   const [isDrawerOpen] = useAtom(drawerAtom);
   const [selectedBoardId] = useAtom(selectedBoardIdAtom);
 
-  const { data: oneBoard } = api.board.getOne.useQuery({ id: selectedBoardId });
+  const { data: selectedBoard } = api.board.getOne.useQuery({
+    id: selectedBoardId,
+  });
 
   const {
     isOpen: addNewTaskModalIsOpen,
@@ -81,7 +83,7 @@ const Header = () => {
             </Center>
           )}
           <Heading as="h1" color={headingColor} size="md">
-            {oneBoard?.title}
+            {selectedBoard?.title}
           </Heading>
         </Flex>
         <Flex align="center" columnGap={6}>

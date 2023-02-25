@@ -12,3 +12,7 @@ export const updateBoardSchema = z.object({
 });
 
 export const deleteBoardSchema = z.object({ id: z.string() });
+
+export const getAllTasksByColumnIdSchema = z.object({ columnId: z.string() });
+
+export const getAllsubtasksByTaskIdSchema = z.object({ taskId: z.string() });
