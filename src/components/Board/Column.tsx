@@ -22,7 +22,9 @@ const Column = ({ id, title }: Props) => {
           borderRadius="50%"
           bgColor={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
         />
-        <Heading variant="board-column-title">{title}</Heading>
+        <Heading variant="board-column-title">{`${title} (${
+          allTasks?.length ?? 0
+        })`}</Heading>
       </Flex>
       {allTasks?.map((task) => (
         <Task key={task.id} id={task.id} />
