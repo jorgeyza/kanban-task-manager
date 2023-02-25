@@ -4,6 +4,10 @@ import {
   CheckboxGroup,
   Flex,
   Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalContent,
@@ -12,6 +16,7 @@ import {
   Select,
   Text,
   useColorModeValue,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
@@ -20,7 +25,8 @@ import { VerticalEllipsisIcon } from "~/assets";
 import { selectedBoardIdAtom } from "~/pages/_app";
 import { api, type RouterOutputs } from "~/utils/api";
 
-import type { ChakraModalProps } from "~/types";
+import type { ChakraModalProps, HTMLProps } from "~/types";
+import CreateOrEditTaskModal from "~/components/Header/CreateOrEditTaskModal";
 
 type Task = RouterOutputs["task"]["getAllByColumnId"][0];
 type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
@@ -43,6 +49,16 @@ const TaskModal = ({
     "lightBlack"
   );
 
+  const {
+    isOpen: createOrEditTaskModalIsOpen,
+    onOpen: createOrEditTaskModalOnOpen,
+    onClose: createOrEditTaskModalOnClose,
+    getButtonProps: createOrEditTaskModalGetButtonProps,
+    getDisclosureProps: createOrEditTaskModalGetDisclosureProps,
+  } = useDisclosure();
+  const createOrEditTaskModalButtonProps =
+    createOrEditTaskModalGetButtonProps() as HTMLProps;
+
   const taskModalDisclosureProps = getDisclosureProps();
 
   const [selectedBoardId] = useAtom(selectedBoardIdAtom);
@@ -52,68 +68,87 @@ const TaskModal = ({
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} {...taskModalDisclosureProps}>
-      <ModalOverlay />
-      <ModalContent rowGap={6} p={8} bgColor={taskBackgroundColor}>
-        <ModalHeader p={0}>
-          <Flex justify="space-between">
-            <Heading as="h4" variant="modal-title">
-              {task?.title}
-            </Heading>
-            <Box flexShrink={0} cursor="pointer">
-              <VerticalEllipsisIcon />
-            </Box>
-          </Flex>
-        </ModalHeader>
-        <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
-          <Text as="p" variant="basic-text">
-            {task?.description}
-          </Text>
-          <Flex direction="column" rowGap={4}>
-            <Heading as="h5" variant="modal-subtitle">
-              {`Subtasks (${
-                subtasks.filter((subtask) => subtask.isDone).length
-              } of ${subtasks.length})`}
-            </Heading>
-            <CheckboxGroup colorScheme="customPurple">
-              <VStack alignItems="start" spacing={2}>
-                {subtasks.map((subtask) => (
-                  <Checkbox
-                    key={subtask.id}
-                    w="full"
-                    p={3}
-                    borderRadius={4}
-                    bgColor={checkboxBackgroundColor}
-                    value="naruto"
+    <>
+      <Modal isOpen={isOpen} onClose={onClose} {...taskModalDisclosureProps}>
+        <ModalOverlay />
+        <ModalContent rowGap={6} p={8} bgColor={taskBackgroundColor}>
+          <ModalHeader p={0}>
+            <Flex justify="space-between">
+              <Heading as="h4" variant="modal-title">
+                {task?.title}
+              </Heading>
+              <Menu>
+                <MenuButton as={Box} cursor="pointer">
+                  <VerticalEllipsisIcon />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={createOrEditTaskModalOnOpen}
+                    {...createOrEditTaskModalButtonProps}
                   >
-                    <Text variant="modal-checkbox">{subtask.title}</Text>
-                  </Checkbox>
-                ))}
-              </VStack>
-            </CheckboxGroup>
-          </Flex>
-          <Flex direction="column" rowGap={2}>
-            <Heading as="h5" variant="modal-subtitle">
-              Status
-            </Heading>
-            <Select
-              fontSize="13px"
-              borderColor="lightGrayAlpha25"
-              iconColor="customPurple.500"
-              placeholder="Select option"
-            >
-              {selectedBoard?.columns.map((column) => {
-                return (
-                  <option key={column.id} value={column.title}>
-                    {column.title}
-                  </option>
-                );
-              })}
-            </Select>
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+                    Edit Task
+                  </MenuItem>
+                  <MenuItem color="customRed">Delete Task</MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+          </ModalHeader>
+          <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
+            <Text as="p" variant="basic-text">
+              {task?.description}
+            </Text>
+            <Flex direction="column" rowGap={4}>
+              <Heading as="h5" variant="modal-subtitle">
+                {`Subtasks (${
+                  subtasks.filter((subtask) => subtask.isDone).length
+                } of ${subtasks.length})`}
+              </Heading>
+              <CheckboxGroup colorScheme="customPurple">
+                <VStack alignItems="start" spacing={2}>
+                  {subtasks.map((subtask) => (
+                    <Checkbox
+                      key={subtask.id}
+                      w="full"
+                      p={3}
+                      borderRadius={4}
+                      bgColor={checkboxBackgroundColor}
+                      value="naruto"
+                    >
+                      <Text variant="modal-checkbox">{subtask.title}</Text>
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </CheckboxGroup>
+            </Flex>
+            <Flex direction="column" rowGap={2}>
+              <Heading as="h5" variant="modal-subtitle">
+                Status
+              </Heading>
+              <Select
+                fontSize="13px"
+                borderColor="lightGrayAlpha25"
+                iconColor="customPurple.500"
+                placeholder="Select option"
+              >
+                {selectedBoard?.columns.map((column) => {
+                  return (
+                    <option key={column.id} value={column.title}>
+                      {column.title}
+                    </option>
+                  );
+                })}
+              </Select>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <CreateOrEditTaskModal
+        isOpen={createOrEditTaskModalIsOpen}
+        onClose={createOrEditTaskModalOnClose}
+        getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
+        action="CREATE"
+      />
+    </>
   );
 };
 
