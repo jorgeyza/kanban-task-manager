@@ -53,28 +53,23 @@ const Header = () => {
   const [isDrawerOpen] = useAtom(drawerAtom);
   const [selectedBoardId, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
 
+  const utils = api.useContext();
+
   const { data: selectedBoard } = api.board.getOne.useQuery({
     id: selectedBoardId,
   });
 
-  const { data: allBoards, refetch: refetchAllBoards } =
-    api.board.getAll.useQuery();
+  const { data: allBoards } = api.board.getAll.useQuery();
 
   const deleteBoard = api.board.delete.useMutation({
-    onSuccess: async () => {
-      await refetchAllBoards();
+    onSuccess() {
+      void utils.board.getAll.invalidate();
+      setSelectedBoardId(allBoards?.at(-2)?.id ?? "");
     },
   });
 
   const handleDeleteBoard = () => {
-    deleteBoard.mutate(
-      { id: selectedBoardId },
-      {
-        onSuccess: () => {
-          setSelectedBoardId(allBoards?.at(-2)?.id ?? "");
-        },
-      }
-    );
+    deleteBoard.mutate({ id: selectedBoardId });
   };
 
   return (
