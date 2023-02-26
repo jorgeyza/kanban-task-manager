@@ -22,10 +22,10 @@ import { useEffect, type KeyboardEvent } from "react";
 import { useAtom } from "jotai";
 
 import { selectedBoardIdAtom } from "~/pages/_app";
-import { createBoardSchema } from "~/schema/board.schema";
-import type { DynamicChakraModalProps } from "~/types";
 import { CrossIcon } from "~/assets";
 import { api } from "~/utils/api";
+import { createBoardSchema } from "~/schema/board.schema";
+import type { DynamicChakraModalProps } from "~/types";
 
 const MODAL_HEADER = {
   CREATE: "Create New Board",
@@ -69,15 +69,17 @@ const CreateOrEditBoardModal = ({
     name: "columns",
   });
 
-  const { refetch: refetchBoards } = api.board.getAll.useQuery();
+  const [, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const utils = api.useContext();
 
   const createBoard = api.board.create.useMutation({
-    onSuccess: async () => {
-      await refetchBoards();
+    onSuccess({ id }) {
+      void utils.board.getAll.invalidate();
+      setSelectedBoardId(id);
+      onClose();
     },
   });
-
-  const [, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     // Prevent submit if I am focusing on adding new columns
@@ -88,18 +90,10 @@ const CreateOrEditBoardModal = ({
     const columns = data.columns.map((column) =>
       column.title === "" ? { title: "Untitled" } : { title: column.title }
     );
-    return createBoard.mutate(
-      {
-        title: data.title,
-        columns,
-      },
-      {
-        onSuccess(data) {
-          setSelectedBoardId(data.id);
-          return onClose();
-        },
-      }
-    );
+    return createBoard.mutate({
+      title: data.title,
+      columns,
+    });
   };
 
   const handleAddNewBoardColumn = () => {
