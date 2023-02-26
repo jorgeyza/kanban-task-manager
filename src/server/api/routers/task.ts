@@ -1,8 +1,9 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
   createTaskSchema,
+  deleteTaskSchema,
   getAllTasksByColumnIdSchema,
-} from "~/schema/board.schema";
+} from "~/schema/task.schema";
 
 export const taskRouter = createTRPCRouter({
   create: publicProcedure.input(createTaskSchema).mutation(({ ctx, input }) => {
@@ -28,8 +29,14 @@ export const taskRouter = createTRPCRouter({
       });
     }),
 
-  getOne: publicProcedure.input(deleteBoardSchema).query(({ ctx, input }) => {
+  getOne: publicProcedure.input(deleteTaskSchema).query(({ ctx, input }) => {
     return ctx.prisma.task.findFirst({
+      where: { id: input.id },
+    });
+  }),
+
+  delete: publicProcedure.input(deleteTaskSchema).mutation(({ ctx, input }) => {
+    return ctx.prisma.task.delete({
       where: { id: input.id },
     });
   }),
