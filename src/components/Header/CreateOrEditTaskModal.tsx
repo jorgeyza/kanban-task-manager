@@ -19,12 +19,16 @@ import {
 } from "@chakra-ui/react";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useEffect, type KeyboardEvent } from "react";
+import { type z } from "zod";
+import { useAtom } from "jotai";
 
-import { TASK_STATUS_ENUM } from "~/constants";
 import { CrossIcon } from "~/assets";
 
 import { type DynamicChakraModalProps } from "~/types";
+import { createTaskSchema } from "~/schema/task.schema";
+import { api } from "~/utils/api";
+import { selectedBoardIdAtom } from "~/pages/_app";
 
 const MODAL_HEADER = {
   CREATE: "Add New Task",
@@ -32,19 +36,9 @@ const MODAL_HEADER = {
 };
 
 const SUBMIT_FORM_BUTTON = {
-  CREATE: "Edit Task",
+  CREATE: "Create Task",
   EDIT: "Save Changes",
 };
-
-const createTaskSchema = z.object({
-  title: z.string().default("Untitled"),
-  description: z.string().optional(),
-  subtasks: z
-    .array(z.object({ title: z.string().default("Unnamed Column") }))
-    .max(10)
-    .optional(),
-  status: z.enum(TASK_STATUS_ENUM),
-});
 
 type FormData = z.infer<typeof createTaskSchema>;
 
@@ -58,16 +52,34 @@ const CreateOrEditTaskModal = ({
 
   const createOrEditTaskModalDisclosureProps = getDisclosureProps();
 
+  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
+
+  const { data: selectedBoard } = api.board.getOne.useQuery({
+    id: selectedBoardId,
+  });
+
+  const utils = api.useContext();
+  const createTask = api.task.create.useMutation({
+    onSuccess() {
+      void utils.task.getAllByColumnId.invalidate();
+      onClose();
+    },
+  });
+
   const {
     handleSubmit,
     register,
+    reset,
+    getValues,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
-      subtasks: [{ title: "" }],
-      status: "To do",
+      title: "",
+      description: "",
+      subtasks: [{ title: "", isDone: false }],
+      columnId: "",
     },
   });
 
@@ -76,15 +88,49 @@ const CreateOrEditTaskModal = ({
     name: "subtasks",
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    // Prevent submit if I am focusing on adding new columns
+    if (document.activeElement?.id.startsWith("field")) {
+      return;
+    }
+
+    const subtasks = data.subtasks.map((subtask) =>
+      subtask.title === ""
+        ? { title: "Untitled", isDone: subtask.isDone }
+        : { title: subtask.title, isDone: subtask.isDone }
+    );
+
+    return createTask.mutate({
+      title: data.title,
+      description: data.description,
+      columnId: data.columnId,
+      subtasks,
+    });
+  };
 
   const handleAddNewSubtask = () => {
-    append({ title: "" });
+    append({ title: "", isDone: false });
   };
 
   const handleDeleteSubtask = (index: number) => {
     remove(index);
   };
+
+  const handleOnKeyDown = (
+    event: KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (
+      event.key === "Enter" &&
+      getValues(`subtasks.${index}.title`).length > 0
+    ) {
+      handleAddNewSubtask();
+    }
+  };
+
+  useEffect(() => {
+    reset();
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <Modal
@@ -152,6 +198,7 @@ const CreateOrEditTaskModal = ({
                   return (
                     <Flex key={subtask.id} columnGap={4}>
                       <Input
+                        onKeyDown={(event) => handleOnKeyDown(event, index)}
                         placeholder="e.g Make coffee"
                         {...register(`subtasks.${index}.title` as const)}
                       />
@@ -172,24 +219,27 @@ const CreateOrEditTaskModal = ({
             <Button w="full" onClick={handleAddNewSubtask} variant="secondary">
               Add New Subtask
             </Button>
-            <FormControl isInvalid={Boolean(errors.status)}>
-              <FormLabel htmlFor="status" variant="modal-subtitle">
+            <FormControl isInvalid={Boolean(errors.columnId)}>
+              <FormLabel htmlFor="columnId" variant="modal-subtitle">
                 Status
               </FormLabel>
               <Select
                 fontSize="13px"
                 borderColor="lightGrayAlpha25"
                 iconColor="customPurple.500"
-                {...register("status")}
+                {...register("columnId")}
               >
-                {TASK_STATUS_ENUM.map((taskStatus) => {
+                {selectedBoard?.columns?.map((column) => {
                   return (
-                    <option key={taskStatus} value={taskStatus}>
-                      {taskStatus}
+                    <option key={column.id} value={column.id}>
+                      {column.title}
                     </option>
                   );
                 })}
               </Select>
+              <FormErrorMessage>
+                {errors.columnId && errors.columnId.message}
+              </FormErrorMessage>
             </FormControl>
             <Button
               w="full"
