@@ -71,7 +71,7 @@ const Header = () => {
       { id: selectedBoardId },
       {
         onSuccess: () => {
-          setSelectedBoardId(allBoards?.at(-1)?.id ?? "");
+          setSelectedBoardId(allBoards?.at(-2)?.id ?? "");
         },
       }
     );
