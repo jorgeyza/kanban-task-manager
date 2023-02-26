@@ -63,9 +63,22 @@ const TaskModal = ({
 
   const [selectedBoardId] = useAtom(selectedBoardIdAtom);
 
+  const utils = api.useContext();
+
   const { data: selectedBoard } = api.board.getOne.useQuery({
     id: selectedBoardId,
   });
+
+  const deleteTask = api.task.delete.useMutation({
+    onSuccess() {
+      void utils.task.getAllByColumnId.invalidate({ columnId: task.columnId });
+      onClose();
+    },
+  });
+
+  const handleDeleteTask = () => {
+    deleteTask.mutate({ id: task.id });
+  };
 
   return (
     <>
@@ -88,7 +101,9 @@ const TaskModal = ({
                   >
                     Edit Task
                   </MenuItem>
-                  <MenuItem color="customRed">Delete Task</MenuItem>
+                  <MenuItem color="customRed" onClick={handleDeleteTask}>
+                    Delete Task
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Flex>
