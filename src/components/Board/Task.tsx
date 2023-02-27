@@ -45,6 +45,7 @@ const Task = ({ id }: Props) => {
         bgColor={taskBackgroundColor}
         onClick={onOpen}
         {...taskModalButtonProps}
+        data-test="test-card"
       >
         <Heading as="h3" variant="task-heading">
           {task?.title}
