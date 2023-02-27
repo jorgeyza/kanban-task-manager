@@ -51,13 +51,13 @@ const TaskModal = ({
 
   const {
     isOpen: createOrEditTaskModalIsOpen,
-    onOpen: createOrEditTaskModalOnOpen,
     onClose: createOrEditTaskModalOnClose,
     getButtonProps: createOrEditTaskModalGetButtonProps,
     getDisclosureProps: createOrEditTaskModalGetDisclosureProps,
   } = useDisclosure();
-  const createOrEditTaskModalButtonProps =
-    createOrEditTaskModalGetButtonProps() as HTMLProps;
+  const createOrEditTaskModalButtonProps = createOrEditTaskModalGetButtonProps({
+    onClick: handleEditTask,
+  }) as HTMLProps;
 
   const taskModalDisclosureProps = getDisclosureProps();
 
@@ -80,9 +80,18 @@ const TaskModal = ({
     deleteTask.mutate({ id: task.id });
   };
 
+  function handleEditTask() {
+    onClose();
+  }
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} {...taskModalDisclosureProps}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        {...taskModalDisclosureProps}
+        data-test="task-modal"
+      >
         <ModalOverlay />
         <ModalContent rowGap={6} p={8} bgColor={taskBackgroundColor}>
           <ModalHeader p={0}>
@@ -95,10 +104,7 @@ const TaskModal = ({
                   <VerticalEllipsisIcon />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem
-                    onClick={createOrEditTaskModalOnOpen}
-                    {...createOrEditTaskModalButtonProps}
-                  >
+                  <MenuItem {...createOrEditTaskModalButtonProps}>
                     Edit Task
                   </MenuItem>
                   <MenuItem color="customRed" onClick={handleDeleteTask}>
@@ -161,7 +167,7 @@ const TaskModal = ({
         isOpen={createOrEditTaskModalIsOpen}
         onClose={createOrEditTaskModalOnClose}
         getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-        action="CREATE"
+        action="EDIT"
       />
     </>
   );
