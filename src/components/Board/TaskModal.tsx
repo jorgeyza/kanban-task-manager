@@ -27,6 +27,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 
 import type { ChakraModalProps, HTMLProps } from "~/types";
 import CreateOrEditTaskModal from "~/components/Header/CreateOrEditTaskModal";
+import { DynamicChakraModalAction } from "~/constants";
 
 type Task = RouterOutputs["task"]["getAllByColumnId"][0];
 type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
@@ -153,7 +154,7 @@ const TaskModal = ({
               >
                 {selectedBoard?.columns.map((column) => {
                   return (
-                    <option key={column.id} value={column.title}>
+                    <option key={column.id} value={column.id}>
                       {column.title}
                     </option>
                   );
@@ -167,7 +168,9 @@ const TaskModal = ({
         isOpen={createOrEditTaskModalIsOpen}
         onClose={createOrEditTaskModalOnClose}
         getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-        action="EDIT"
+        action={DynamicChakraModalAction.EDIT}
+        task={task}
+        subtasks={subtasks}
       />
     </>
   );

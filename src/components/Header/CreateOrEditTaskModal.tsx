@@ -29,16 +29,17 @@ import { type DynamicChakraModalProps } from "~/types";
 import { createTaskSchema } from "~/schema/task.schema";
 import { api } from "~/utils/api";
 import { selectedBoardIdAtom } from "~/pages/_app";
+import { DynamicChakraModalAction } from "~/constants";
 
 const MODAL_HEADER = {
-  CREATE: "Add New Task",
-  EDIT: "Edit Task",
-};
+  [DynamicChakraModalAction.CREATE]: "Add New Task",
+  [DynamicChakraModalAction.EDIT]: "Edit Task",
+} as const;
 
 const SUBMIT_FORM_BUTTON = {
-  CREATE: "Create Task",
-  EDIT: "Save Changes",
-};
+  [DynamicChakraModalAction.CREATE]: "Create Task",
+  [DynamicChakraModalAction.EDIT]: "Save Changes",
+} as const;
 
 type FormData = z.infer<typeof createTaskSchema>;
 
@@ -47,6 +48,8 @@ const CreateOrEditTaskModal = ({
   onClose,
   getDisclosureProps,
   action,
+  task,
+  subtasks,
 }: DynamicChakraModalProps) => {
   const backgroundColor = useColorModeValue("white", "darkerGray");
 
@@ -60,11 +63,32 @@ const CreateOrEditTaskModal = ({
 
   const utils = api.useContext();
   const createTask = api.task.create.useMutation({
-    onSuccess() {
-      void utils.task.getAllByColumnId.invalidate();
+    onSuccess(data) {
+      void utils.task.getAllByColumnId.invalidate({ columnId: data.columnId });
       onClose();
     },
   });
+  const updateTask = api.task.update.useMutation({
+    onSuccess() {
+      void utils.task.getOne.invalidate({ id: task?.id });
+      onClose();
+    },
+  });
+
+  const defaultValues =
+    task && subtasks
+      ? {
+          title: task.title,
+          description: task.description,
+          subtasks,
+          columnId: task.columnId,
+        }
+      : {
+          title: "",
+          description: "",
+          subtasks: [{ title: "", isDone: false }],
+          columnId: "",
+        };
 
   const {
     handleSubmit,
@@ -75,12 +99,7 @@ const CreateOrEditTaskModal = ({
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     resolver: zodResolver(createTaskSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      subtasks: [{ title: "", isDone: false }],
-      columnId: "",
-    },
+    defaultValues,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -94,18 +113,37 @@ const CreateOrEditTaskModal = ({
       return;
     }
 
-    const subtasks = data.subtasks.map((subtask) =>
-      subtask.title === ""
+    const modifiedSubtasks = data.subtasks.map((subtask) => {
+      return subtask.title === ""
         ? { title: "Untitled", isDone: subtask.isDone }
-        : { title: subtask.title, isDone: subtask.isDone }
-    );
-
-    return createTask.mutate({
-      title: data.title,
-      description: data.description,
-      columnId: data.columnId,
-      subtasks,
+        : { title: subtask.title, isDone: subtask.isDone };
     });
+
+    switch (action) {
+      case DynamicChakraModalAction.CREATE:
+        return createTask.mutate({
+          title: data.title,
+          description: data.description,
+          columnId: data.columnId,
+          subtasks: modifiedSubtasks,
+        });
+
+      case DynamicChakraModalAction.EDIT:
+        if (task) {
+          return updateTask.mutate({
+            id: task.id,
+            title: data.title,
+            description: data.description,
+            columnId: data.columnId,
+            subtasks: modifiedSubtasks,
+          });
+        }
+        break;
+
+      default:
+        const exhaustiveCheck: never = action;
+        throw new Error(exhaustiveCheck);
+    }
   };
 
   const handleAddNewSubtask = () => {

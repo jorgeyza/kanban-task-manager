@@ -3,6 +3,7 @@ import {
   createTaskSchema,
   deleteTaskSchema,
   getAllTasksByColumnIdSchema,
+  updateTaskSchema,
 } from "~/schema/task.schema";
 
 export const taskRouter = createTRPCRouter({
@@ -32,6 +33,25 @@ export const taskRouter = createTRPCRouter({
   getOne: publicProcedure.input(deleteTaskSchema).query(({ ctx, input }) => {
     return ctx.prisma.task.findFirst({
       where: { id: input.id },
+    });
+  }),
+
+  update: publicProcedure.input(updateTaskSchema).mutation(({ ctx, input }) => {
+    return ctx.prisma.task.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        title: input.title,
+        description: input.description ?? "",
+        column: { connect: { id: input.columnId } },
+        subtasks: {
+          deleteMany: {},
+          createMany: {
+            data: input.subtasks,
+          },
+        },
+      },
     });
   }),
 
