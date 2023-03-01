@@ -26,15 +26,16 @@ import { CrossIcon } from "~/assets";
 import { api } from "~/utils/api";
 import { createBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
+import { DynamicChakraModalAction } from "~/constants";
 
 const MODAL_HEADER = {
-  CREATE: "Create New Board",
-  EDIT: "Edit Board",
+  [DynamicChakraModalAction.CREATE]: "Create New Board",
+  [DynamicChakraModalAction.EDIT]: "Edit Board",
 };
 
 const SUBMIT_FORM_BUTTON = {
-  CREATE: "Create New Board",
-  EDIT: "Save Changes",
+  [DynamicChakraModalAction.CREATE]: "Create New Board",
+  [DynamicChakraModalAction.EDIT]: "Save Changes",
 };
 
 type FormData = z.infer<typeof createBoardSchema>;
