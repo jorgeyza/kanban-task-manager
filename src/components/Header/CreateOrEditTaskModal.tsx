@@ -129,7 +129,7 @@ const CreateOrEditTaskModal = ({
         });
 
       case DynamicChakraModalAction.EDIT:
-        if (task) {
+        if (task)
           return updateTask.mutate({
             id: task.id,
             title: data.title,
@@ -137,7 +137,7 @@ const CreateOrEditTaskModal = ({
             columnId: data.columnId,
             subtasks: modifiedSubtasks,
           });
-        }
+
         break;
 
       default:
