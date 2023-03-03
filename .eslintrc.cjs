@@ -1,5 +1,5 @@
 /** @type {import("eslint").Linter.Config} */
-module.exports = {
+const config = {
   overrides: [
     {
       extends: [
@@ -45,3 +45,5 @@ module.exports = {
     ],
   },
 };
+
+module.exports = config;
