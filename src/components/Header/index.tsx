@@ -10,6 +10,7 @@ import {
   useColorModeValue,
   useDisclosure,
   Center,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
@@ -102,15 +103,24 @@ const Header = () => {
           </Heading>
         </Flex>
         <Flex align="center" columnGap={6}>
-          <Button
-            bgColor="customPurple.500"
-            onClick={createOrEditTaskModalOnOpen}
-            size="lg"
-            variant="primary"
-            {...createOrEditTaskModalButtonProps}
+          <Tooltip
+            aria-label="A tooltip"
+            label={
+              selectedBoard?.columns.length === 0 &&
+              "You have to create a column before adding tasks"
+            }
           >
-            + Add New Task
-          </Button>
+            <Button
+              bgColor="customPurple.500"
+              isDisabled={selectedBoard?.columns.length === 0}
+              onClick={createOrEditTaskModalOnOpen}
+              size="lg"
+              variant="primary"
+              {...createOrEditTaskModalButtonProps}
+            >
+              + Add New Task
+            </Button>
+          </Tooltip>
           <Menu>
             <MenuButton as={Box} cursor="pointer">
               <VerticalEllipsisIcon />
