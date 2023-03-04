@@ -135,12 +135,15 @@ const Header = () => {
         getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
         action="CREATE"
       />
-      <CreateOrEditBoardModal
-        isOpen={createOrEditBoardModalIsOpen}
-        onClose={createOrEditBoardModalOnClose}
-        getDisclosureProps={createOrEditBoardModalGetDisclosureProps}
-        action="EDIT"
-      />
+      {selectedBoard && createOrEditBoardModalIsOpen && (
+        <CreateOrEditBoardModal
+          isOpen={createOrEditBoardModalIsOpen}
+          onClose={createOrEditBoardModalOnClose}
+          getDisclosureProps={createOrEditBoardModalGetDisclosureProps}
+          action="EDIT"
+          board={selectedBoard}
+        />
+      )}
     </>
   );
 };
