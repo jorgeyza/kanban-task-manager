@@ -14,9 +14,9 @@ const Sidebar = () => {
   const sidebarBorderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
   const LogoColor = useColorModeValue("black", "white");
 
-  const handleCloseDrawer = () => {
+  function handleCloseDrawer() {
     setIsDrawerOpen(false);
-  };
+  }
 
   return (
     <>

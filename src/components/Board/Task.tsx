@@ -18,7 +18,7 @@ interface Props {
 const Task = ({ id }: Props) => {
   const taskBackgroundColor = useColorModeValue("white", "darkerGray");
   const taskHoverBackgroundColor = useColorModeValue("whiteSoft", "darkGray");
-  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
+  const { isOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
 
   const taskModalButtonProps = getButtonProps() as HTMLProps;
@@ -43,7 +43,6 @@ const Task = ({ id }: Props) => {
         _hover={{ backgroundColor: taskHoverBackgroundColor }}
         cursor="pointer"
         bgColor={taskBackgroundColor}
-        onClick={onOpen}
         {...taskModalButtonProps}
         data-test="test-card"
       >

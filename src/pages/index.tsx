@@ -10,9 +10,9 @@ import { drawerAtom } from "./_app";
 const Home: NextPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
 
-  const handleOpenDrawer = () => {
+  function handleOpenDrawer() {
     setIsDrawerOpen(true);
-  };
+  }
 
   return (
     <>
