@@ -42,14 +42,23 @@ export const boardRouter = createTRPCRouter({
         data: { title: input.title },
       });
 
+      const deleteColumns = ctx.prisma.column.deleteMany({
+        where: { id: { in: input.columnsIdsToDelete } },
+      });
+
       const updateColumns = input.columns.map((column) => {
-        return ctx.prisma.column.update({
+        return ctx.prisma.column.upsert({
           where: { id: column.id },
-          data: { title: column.title },
+          update: { title: column.title },
+          create: { title: column.title, board: { connect: { id: input.id } } },
         });
       });
 
-      return ctx.prisma.$transaction([updateBoardName, ...updateColumns]);
+      return ctx.prisma.$transaction([
+        updateBoardName,
+        deleteColumns,
+        ...updateColumns,
+      ]);
     }),
 
   delete: publicProcedure

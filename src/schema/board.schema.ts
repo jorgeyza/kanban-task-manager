@@ -11,7 +11,7 @@ export const updateBoardSchema = z.object({
   id: z.string(),
   title: z.string().min(1),
   columns: z
-    .array(z.object({ id: z.string().optional(), title: z.string() }))
+    .array(z.object({ id: z.string(), title: z.string() }))
     .max(10, { message: "You can only have 10 columns per board" }),
   columnsIdsToDelete: z.array(z.string()),
 });

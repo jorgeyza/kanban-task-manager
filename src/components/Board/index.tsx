@@ -6,13 +6,13 @@ import {
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
-import { selectedBoardIdAtom } from "~/pages/_app";
-
 import Column from "./Column";
 import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
 
+import { selectedBoardIdAtom } from "~/pages/_app";
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
+import { DynamicChakraModalAction } from "~/constants";
 
 const Board = () => {
   const newColumnBackgroundColor = useColorModeValue("lightGray", "darkerGray");
@@ -21,7 +21,7 @@ const Board = () => {
     "darkGray"
   );
 
-  const { isOpen, onOpen, onClose, getButtonProps, getDisclosureProps } =
+  const { isOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
   const createOrEditBoardButtonProps = getButtonProps() as HTMLProps;
 
@@ -51,17 +51,19 @@ const Board = () => {
         borderRadius={8}
         _hover={{ backgroundColor: newColumnHoverBackgroundColor }}
         bgColor={newColumnBackgroundColor}
-        onClick={onOpen}
         {...createOrEditBoardButtonProps}
       >
         + New Column
       </Center>
-      <CreateOrEditBoardModal
-        isOpen={isOpen}
-        onClose={onClose}
-        getDisclosureProps={getDisclosureProps}
-        action="EDIT"
-      />
+      {selectedBoard && isOpen && (
+        <CreateOrEditBoardModal
+          isOpen={isOpen}
+          onClose={onClose}
+          getDisclosureProps={getDisclosureProps}
+          action={DynamicChakraModalAction.EDIT}
+          board={selectedBoard}
+        />
+      )}
     </Flex>
   );
 };
