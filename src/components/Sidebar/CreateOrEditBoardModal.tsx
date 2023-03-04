@@ -19,21 +19,13 @@ import {
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type * as z from "zod";
-import {
-  type ChangeEvent,
-  useEffect,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect } from "react";
 import { useAtom } from "jotai";
 
 import { selectedBoardIdAtom } from "~/pages/_app";
 import { CrossIcon } from "~/assets";
 import { api } from "~/utils/api";
-import {
-  createBoardSchema,
-  type updateBoardSchema,
-} from "~/schema/board.schema";
+import { updateBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
 import { DynamicChakraModalAction } from "~/constants";
 
@@ -68,6 +60,7 @@ const CreateOrEditBoardModal = ({
           id: column.id,
           title: column.title,
         })),
+        columnsIdsToDelete: [],
       }
     : {
         title: "",
@@ -83,7 +76,7 @@ const CreateOrEditBoardModal = ({
     control,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
-    resolver: zodResolver(createBoardSchema),
+    resolver: zodResolver(updateBoardSchema),
     defaultValues,
   });
 
@@ -92,7 +85,6 @@ const CreateOrEditBoardModal = ({
     name: "columns",
   });
 
-  const [columnsIdsToDelete, setColumnsIdsToDelete] = useState<string[]>([]);
   const [selectedBoardId, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
 
   const utils = api.useContext();
@@ -107,18 +99,18 @@ const CreateOrEditBoardModal = ({
 
   const updateBoard = api.board.update.useMutation({
     onSuccess() {
+      void utils.board.getAll.invalidate();
       void utils.board.getOne.invalidate({ id: selectedBoardId });
       onClose();
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = () => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     // Prevent submit if I am focusing on adding new columns
     if (document.activeElement?.id.startsWith("field")) {
       return;
     }
-    // For some reason, the parameter data from onSubmit differs from getValues(), I will use getValues() as it has the correct data
-    const data = getValues();
+
     data.columns = data.columns.map((column) => ({
       id: column.id,
       title: column.title || "Untitled",
@@ -136,7 +128,7 @@ const CreateOrEditBoardModal = ({
           id: selectedBoardId,
           title: data.title,
           columns: data.columns,
-          columnsIdsToDelete,
+          columnsIdsToDelete: data.columnsIdsToDelete,
         });
 
       default:
@@ -145,21 +137,24 @@ const CreateOrEditBoardModal = ({
     }
   };
 
-  const handleAddNewBoardColumn = () => {
+  function handleAddNewBoardColumn() {
     append({ id: "", title: "" });
-  };
+  }
 
-  const handleDeleteBoardColumn = ({
+  function handleDeleteBoardColumn({
     index,
     columnIdToBeDeleted,
   }: {
     index: number;
     columnIdToBeDeleted?: string;
-  }) => {
+  }) {
     remove(index);
     if (!!columnIdToBeDeleted)
-      setColumnsIdsToDelete([...columnsIdsToDelete, columnIdToBeDeleted]);
-  };
+      setValue("columnsIdsToDelete", [
+        ...getValues("columnsIdsToDelete"),
+        columnIdToBeDeleted,
+      ]);
+  }
 
   function handleColumnTitleChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -170,17 +165,17 @@ const CreateOrEditBoardModal = ({
     setValue(`columns.${index}.title`, event.target.value);
   }
 
-  const handleOnKeyDown = (
+  function handleOnKeyDown(
     event: KeyboardEvent<HTMLInputElement>,
     index: number
-  ) => {
+  ) {
     if (
       event.key === "Enter" &&
       getValues(`columns.${index}.title`).length > 0
     ) {
       handleAddNewBoardColumn();
     }
-  };
+  }
 
   useEffect(() => {
     reset();
@@ -212,7 +207,6 @@ const CreateOrEditBoardModal = ({
             <FormControl
               borderColor="lightGrayAlpha25"
               isInvalid={Boolean(errors.title)}
-              isRequired
             >
               <FormLabel htmlFor="title" variant="modal-subtitle">
                 Board Name
@@ -236,45 +230,39 @@ const CreateOrEditBoardModal = ({
               <Flex direction="column" rowGap={3} overflow="auto" maxH={250}>
                 {fields.map((boardColumn, index) => {
                   return (
-                    <>
-                      <Flex key={boardColumn.id} columnGap={4}>
-                        <Input
-                          onKeyDown={(event) => handleOnKeyDown(event, index)}
-                          placeholder="e.g Todo"
-                          {...register(`columns.${index}.title` as const)}
-                          onChange={(event) =>
-                            handleColumnTitleChange(event, index)
-                          }
-                        />
-                        <Tooltip
-                          aria-label="A tooltip"
-                          label={
-                            action === DynamicChakraModalAction.EDIT &&
-                            getValues(`columns.${index}.id`)
-                              ? "If you delete this column, all related tasks will be deleted"
-                              : undefined
+                    <Flex key={boardColumn.id} columnGap={4}>
+                      <Input
+                        onKeyDown={(event) => handleOnKeyDown(event, index)}
+                        placeholder="e.g Todo"
+                        {...register(`columns.${index}.title` as const)}
+                        onChange={(event) =>
+                          handleColumnTitleChange(event, index)
+                        }
+                      />
+                      <Tooltip
+                        aria-label="A tooltip"
+                        label={
+                          action === DynamicChakraModalAction.EDIT &&
+                          getValues(`columns.${index}.id`)
+                            ? "If you delete this column, all related tasks will be deleted"
+                            : undefined
+                        }
+                      >
+                        <Center
+                          cursor="pointer"
+                          onClick={() =>
+                            handleDeleteBoardColumn({
+                              index,
+                              columnIdToBeDeleted: getValues(
+                                `columns.${index}.id`
+                              ),
+                            })
                           }
                         >
-                          <Center
-                            cursor="pointer"
-                            onClick={() =>
-                              handleDeleteBoardColumn({
-                                index,
-                                columnIdToBeDeleted: getValues(
-                                  `columns.${index}.id`
-                                ),
-                              })
-                            }
-                          >
-                            <CrossIcon />
-                          </Center>
-                        </Tooltip>
-                      </Flex>
-                      <FormErrorMessage>
-                        {errors.columns?.[index] &&
-                          errors.columns?.[index]?.title?.message}
-                      </FormErrorMessage>
-                    </>
+                          <CrossIcon />
+                        </Center>
+                      </Tooltip>
+                    </Flex>
                   );
                 })}
               </Flex>
