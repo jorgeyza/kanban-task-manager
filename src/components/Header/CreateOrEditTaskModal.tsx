@@ -19,14 +19,14 @@ import {
 } from "@chakra-ui/react";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, type KeyboardEvent } from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect } from "react";
 import { type z } from "zod";
 import { useAtom } from "jotai";
 
 import { CrossIcon } from "~/assets";
 
 import { type DynamicChakraModalProps } from "~/types";
-import { createTaskSchema } from "~/schema/task.schema";
+import { updateTaskSchema } from "~/schema/task.schema";
 import { api } from "~/utils/api";
 import { selectedBoardIdAtom } from "~/pages/_app";
 import { DynamicChakraModalAction } from "~/constants";
@@ -41,7 +41,7 @@ const SUBMIT_FORM_BUTTON = {
   [DynamicChakraModalAction.EDIT]: "Save Changes",
 } as const;
 
-type FormData = z.infer<typeof createTaskSchema>;
+type FormData = z.infer<typeof updateTaskSchema>;
 
 const CreateOrEditTaskModal = ({
   isOpen,
@@ -69,8 +69,13 @@ const CreateOrEditTaskModal = ({
     },
   });
   const updateTask = api.task.update.useMutation({
-    onSuccess() {
+    onSuccess(data) {
       void utils.task.getOne.invalidate({ id: task?.id });
+      void utils.subtask.getAllByTaskId.invalidate({ taskId: task?.id });
+      void utils.task.getAllByColumnId.invalidate({ columnId: task?.columnId });
+      void utils.task.getAllByColumnId.invalidate({
+        columnId: data[0].columnId,
+      });
       onClose();
     },
   });
@@ -78,16 +83,24 @@ const CreateOrEditTaskModal = ({
   const defaultValues =
     task && subtasks
       ? {
+          id: task.id,
           title: task.title,
           description: task.description,
-          subtasks,
+          subtasks: subtasks.map((subtask) => ({
+            id: subtask.id,
+            title: subtask.title,
+            isDone: subtask.isDone,
+          })),
           columnId: task.columnId,
+          subtasksIdsToDelete: [],
         }
       : {
+          id: "",
           title: "",
           description: "",
-          subtasks: [{ title: "", isDone: false }],
+          subtasks: [{ id: "", title: "", isDone: false }],
           columnId: "",
+          subtasksIdsToDelete: [],
         };
 
   const {
@@ -95,10 +108,11 @@ const CreateOrEditTaskModal = ({
     register,
     reset,
     getValues,
+    setValue,
     control,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
-    resolver: zodResolver(createTaskSchema),
+    resolver: zodResolver(updateTaskSchema),
     defaultValues,
   });
 
@@ -108,16 +122,17 @@ const CreateOrEditTaskModal = ({
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
+    console.log("🚀 ~ file: CreateOrEditTaskModal.tsx:314 ~ data:", data);
     // Prevent submit if I am focusing on adding new columns
     if (document.activeElement?.id.startsWith("field")) {
       return;
     }
 
-    const modifiedSubtasks = data.subtasks.map((subtask) => {
-      return subtask.title === ""
-        ? { title: "Untitled", isDone: subtask.isDone }
-        : { title: subtask.title, isDone: subtask.isDone };
-    });
+    data.subtasks = data.subtasks.map((subtask) => ({
+      id: subtask.id,
+      title: subtask.title || "Untitled",
+      isDone: subtask.isDone,
+    }));
 
     switch (action) {
       case DynamicChakraModalAction.CREATE:
@@ -125,7 +140,7 @@ const CreateOrEditTaskModal = ({
           title: data.title,
           description: data.description,
           columnId: data.columnId,
-          subtasks: modifiedSubtasks,
+          subtasks: data.subtasks,
         });
 
       case DynamicChakraModalAction.EDIT:
@@ -135,7 +150,8 @@ const CreateOrEditTaskModal = ({
             title: data.title,
             description: data.description,
             columnId: data.columnId,
-            subtasks: modifiedSubtasks,
+            subtasks: data.subtasks,
+            subtasksIdsToDelete: data.subtasksIdsToDelete,
           });
 
         break;
@@ -146,25 +162,45 @@ const CreateOrEditTaskModal = ({
     }
   };
 
-  const handleAddNewSubtask = () => {
-    append({ title: "", isDone: false });
-  };
+  function handleAddNewSubtask() {
+    append({ id: "", title: "", isDone: false });
+  }
 
-  const handleDeleteSubtask = (index: number) => {
+  function handleDeleteSubtask({
+    index,
+    subtaskIdToBeDeleted,
+  }: {
+    index: number;
+    subtaskIdToBeDeleted?: string;
+  }) {
     remove(index);
-  };
+    if (!!subtaskIdToBeDeleted)
+      setValue("subtasksIdsToDelete", [
+        ...getValues("subtasksIdsToDelete"),
+        subtaskIdToBeDeleted,
+      ]);
+  }
 
-  const handleOnKeyDown = (
+  function handleSubtaskTitleChange(
+    event: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (!!getValues(`subtasks.${index}.id`) || !event.target.value) return;
+    setValue(`subtasks.${index}.id`, "");
+    setValue(`subtasks.${index}.title`, event.target.value);
+  }
+
+  function handleOnKeyDown(
     event: KeyboardEvent<HTMLInputElement>,
     index: number
-  ) => {
+  ) {
     if (
       event.key === "Enter" &&
       getValues(`subtasks.${index}.title`).length > 0
     ) {
       handleAddNewSubtask();
     }
-  };
+  }
 
   useEffect(() => {
     reset();
@@ -205,13 +241,10 @@ const CreateOrEditTaskModal = ({
                 {...register("title")}
               />
               <FormErrorMessage>
-                {errors.title && errors.title.message}
+                {errors.title && "Add a title for the task"}
               </FormErrorMessage>
             </FormControl>
-            <FormControl
-              borderColor="lightGrayAlpha25"
-              isInvalid={Boolean(errors.description)}
-            >
+            <FormControl borderColor="lightGrayAlpha25">
               <FormLabel htmlFor="description" variant="modal-subtitle">
                 Description
               </FormLabel>
@@ -220,9 +253,6 @@ const CreateOrEditTaskModal = ({
                 placeholder="It's always good to take a break. This  15 minute break will  recharge the batteries  a little."
                 {...register("description")}
               />
-              <FormErrorMessage>
-                {errors.description && errors.description.message}
-              </FormErrorMessage>
             </FormControl>
             <FormControl
               borderColor="lightGrayAlpha25"
@@ -239,10 +269,20 @@ const CreateOrEditTaskModal = ({
                         onKeyDown={(event) => handleOnKeyDown(event, index)}
                         placeholder="e.g Make coffee"
                         {...register(`subtasks.${index}.title` as const)}
+                        onChange={(event) =>
+                          handleSubtaskTitleChange(event, index)
+                        }
                       />
                       <Center
                         cursor="pointer"
-                        onClick={() => handleDeleteSubtask(index)}
+                        onClick={() =>
+                          handleDeleteSubtask({
+                            index,
+                            subtaskIdToBeDeleted: getValues(
+                              `subtasks.${index}.id`
+                            ),
+                          })
+                        }
                       >
                         <CrossIcon />
                       </Center>
@@ -276,7 +316,7 @@ const CreateOrEditTaskModal = ({
                 })}
               </Select>
               <FormErrorMessage>
-                {errors.columnId && errors.columnId.message}
+                {errors.columnId && "Select the task status"}
               </FormErrorMessage>
             </FormControl>
             <Button

@@ -37,22 +37,36 @@ export const taskRouter = createTRPCRouter({
   }),
 
   update: publicProcedure.input(updateTaskSchema).mutation(({ ctx, input }) => {
-    return ctx.prisma.task.update({
-      where: {
-        id: input.id,
-      },
+    const updateTask = ctx.prisma.task.update({
+      where: { id: input.id },
       data: {
         title: input.title,
         description: input.description ?? "",
         column: { connect: { id: input.columnId } },
-        subtasks: {
-          deleteMany: {},
-          createMany: {
-            data: input.subtasks,
-          },
-        },
       },
     });
+
+    const deleteSubtasks = ctx.prisma.subtask.deleteMany({
+      where: { id: { in: input.subtasksIdsToDelete } },
+    });
+
+    const updateSubtasks = input.subtasks.map((subtask) => {
+      return ctx.prisma.subtask.upsert({
+        where: { id: subtask.id },
+        update: { title: subtask.title, isDone: subtask.isDone },
+        create: {
+          title: subtask.title,
+          isDone: subtask.isDone,
+          task: { connect: { id: input.id } },
+        },
+      });
+    });
+
+    return ctx.prisma.$transaction([
+      updateTask,
+      deleteSubtasks,
+      ...updateSubtasks,
+    ]);
   }),
 
   delete: publicProcedure.input(deleteTaskSchema).mutation(({ ctx, input }) => {
