@@ -122,7 +122,6 @@ const CreateOrEditTaskModal = ({
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log("🚀 ~ file: CreateOrEditTaskModal.tsx:314 ~ data:", data);
     // Prevent submit if I am focusing on adding new columns
     if (document.activeElement?.id.startsWith("field")) {
       return;
@@ -203,6 +202,11 @@ const CreateOrEditTaskModal = ({
   }
 
   useEffect(() => {
+    // Prevent submit if I am focusing on adding new columns
+    if (document.activeElement?.id.startsWith("field") && isSubmitSuccessful) {
+      return;
+    }
+
     reset();
   }, [isSubmitSuccessful, reset]);
 
@@ -221,7 +225,7 @@ const CreateOrEditTaskModal = ({
             {MODAL_HEADER[action]}
           </Heading>
         </ModalHeader>
-        <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
+        <ModalBody p={0}>
           <chakra.form
             display="flex"
             flexDirection="column"
