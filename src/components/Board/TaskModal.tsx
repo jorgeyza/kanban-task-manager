@@ -1,4 +1,5 @@
 import {
+  chakra,
   Box,
   Checkbox,
   CheckboxGroup,
@@ -18,8 +19,13 @@ import {
   useColorModeValue,
   useDisclosure,
   VStack,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
+import { type z } from "zod";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { VerticalEllipsisIcon } from "~/assets";
 import { selectedBoardIdAtom } from "~/pages/_app";
@@ -28,9 +34,13 @@ import { api, type RouterOutputs } from "~/utils/api";
 import type { ChakraModalProps, HTMLProps } from "~/types";
 import CreateOrEditTaskModal from "~/components/Header/CreateOrEditTaskModal";
 import { DynamicChakraModalAction } from "~/constants";
+import { updateTaskSchema } from "~/schema/task.schema";
+import { useEffect, useMemo } from "react";
 
 type Task = RouterOutputs["task"]["getAllByColumnId"][0];
 type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
+
+type FormData = z.infer<typeof updateTaskSchema>;
 
 interface Props extends ChakraModalProps {
   task: Task;
@@ -65,31 +75,82 @@ const TaskModal = ({
   const [selectedBoardId] = useAtom(selectedBoardIdAtom);
 
   const utils = api.useContext();
-
   const { data: selectedBoard } = api.board.getOne.useQuery({
     id: selectedBoardId,
   });
-
   const deleteTask = api.task.delete.useMutation({
     onSuccess() {
       void utils.task.getAllByColumnId.invalidate({ columnId: task.columnId });
       onClose();
     },
   });
+  const updateTask = api.task.update.useMutation({
+    onSuccess(data) {
+      void utils.subtask.getAllByTaskId.invalidate({ taskId: task.id });
+      void utils.task.getOne.invalidate({ id: task.id });
+      void utils.task.getAllByColumnId.invalidate({ columnId: task.columnId });
+      void utils.task.getAllByColumnId.invalidate({
+        columnId: data[0].columnId,
+      });
+    },
+  });
 
-  const handleDeleteTask = () => {
-    deleteTask.mutate({ id: task.id });
+  const defaultValues = useMemo(
+    () => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      columnId: task.columnId,
+      subtasks: subtasks.map((subtask) => ({
+        id: subtask.id,
+        title: subtask.title,
+        isDone: subtask.isDone,
+      })),
+      subtasksIdsToDelete: [],
+    }),
+    [subtasks, task]
+  );
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors, isSubmitSuccessful, isDirty },
+  } = useForm<FormData>({
+    resolver: zodResolver(updateTaskSchema),
+    defaultValues,
+  });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (isDirty)
+      return updateTask.mutate({
+        id: task.id,
+        title: data.title,
+        description: data.description,
+        columnId: data.columnId,
+        subtasks: data.subtasks,
+        subtasksIdsToDelete: data.subtasksIdsToDelete,
+      });
   };
+
+  function handleDeleteTask() {
+    deleteTask.mutate({ id: task.id });
+  }
 
   function handleEditTask() {
     onClose();
   }
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, isSubmitSuccessful, reset]);
 
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
+        onCloseComplete={handleSubmit(onSubmit)}
         {...taskModalDisclosureProps}
         data-test="task-modal"
       >
@@ -115,63 +176,73 @@ const TaskModal = ({
               </Menu>
             </Flex>
           </ModalHeader>
-          <ModalBody flexDir="column" rowGap={6} display="flex" p={0}>
-            <Text as="p" variant="basic-text">
-              {task?.description}
-            </Text>
-            <Flex direction="column" rowGap={4}>
-              <Heading as="h5" variant="modal-subtitle">
-                {`Subtasks (${
-                  subtasks.filter((subtask) => subtask.isDone).length
-                } of ${subtasks.length})`}
-              </Heading>
-              <CheckboxGroup colorScheme="customPurple">
-                <VStack alignItems="start" spacing={2}>
-                  {subtasks.map((subtask) => (
-                    <Checkbox
-                      key={subtask.id}
-                      w="full"
-                      p={3}
-                      borderRadius={4}
-                      bgColor={checkboxBackgroundColor}
-                      value="naruto"
-                    >
-                      <Text variant="modal-checkbox">{subtask.title}</Text>
-                    </Checkbox>
-                  ))}
-                </VStack>
-              </CheckboxGroup>
-            </Flex>
-            <Flex direction="column" rowGap={2}>
-              <Heading as="h5" variant="modal-subtitle">
-                Status
-              </Heading>
-              <Select
-                fontSize="13px"
+          <ModalBody p={0}>
+            <chakra.form display="flex" flexDirection="column" rowGap={6}>
+              <Text as="p" variant="basic-text">
+                {task?.description}
+              </Text>
+              <FormControl
                 borderColor="lightGrayAlpha25"
-                iconColor="customPurple.500"
-                placeholder="Select option"
+                isInvalid={Boolean(errors.subtasks)}
               >
-                {selectedBoard?.columns.map((column) => {
-                  return (
-                    <option key={column.id} value={column.id}>
-                      {column.title}
-                    </option>
-                  );
-                })}
-              </Select>
-            </Flex>
+                <FormLabel htmlFor="subtask" variant="modal-subtitle">
+                  {`Subtasks (${
+                    subtasks.filter((subtask) => subtask.isDone).length
+                  } of ${subtasks.length})`}
+                </FormLabel>
+
+                <Flex direction="column" rowGap={4}>
+                  <CheckboxGroup colorScheme="customPurple">
+                    <VStack alignItems="start" spacing={2}>
+                      {subtasks.map((subtask, index) => (
+                        <Checkbox
+                          key={subtask.id}
+                          w="full"
+                          p={3}
+                          borderRadius={4}
+                          bgColor={checkboxBackgroundColor}
+                          {...register(`subtasks.${index}.isDone` as const)}
+                        >
+                          <Text variant="modal-checkbox">{subtask.title}</Text>
+                        </Checkbox>
+                      ))}
+                    </VStack>
+                  </CheckboxGroup>
+                </Flex>
+              </FormControl>
+              <Flex direction="column" rowGap={2}>
+                <Heading as="h5" variant="modal-subtitle">
+                  Status
+                </Heading>
+                <Select
+                  fontSize="13px"
+                  borderColor="lightGrayAlpha25"
+                  iconColor="customPurple.500"
+                  {...register("columnId")}
+                >
+                  {selectedBoard?.columns.map((column) => {
+                    return (
+                      <option key={column.id} value={column.id}>
+                        {column.title}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </Flex>
+            </chakra.form>
           </ModalBody>
         </ModalContent>
       </Modal>
-      <CreateOrEditTaskModal
-        isOpen={createOrEditTaskModalIsOpen}
-        onClose={createOrEditTaskModalOnClose}
-        getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-        action={DynamicChakraModalAction.EDIT}
-        task={task}
-        subtasks={subtasks}
-      />
+      {task && subtasks && createOrEditTaskModalIsOpen && (
+        <CreateOrEditTaskModal
+          isOpen={createOrEditTaskModalIsOpen}
+          onClose={createOrEditTaskModalOnClose}
+          getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
+          action={DynamicChakraModalAction.EDIT}
+          task={task}
+          subtasks={subtasks}
+        />
+      )}
     </>
   );
 };
