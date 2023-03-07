@@ -6,7 +6,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import TaskModal from "./TaskModal";
+import TaskViewModal from "./TaskViewModal";
 
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
@@ -21,7 +21,7 @@ const Task = ({ id }: Props) => {
   const { isOpen, onClose, getButtonProps, getDisclosureProps } =
     useDisclosure();
 
-  const taskModalButtonProps = getButtonProps() as HTMLProps;
+  const taskViewModalButtonProps = getButtonProps() as HTMLProps;
 
   const { data: task } = api.task.getOne.useQuery({
     id,
@@ -43,7 +43,7 @@ const Task = ({ id }: Props) => {
         _hover={{ backgroundColor: taskHoverBackgroundColor }}
         cursor="pointer"
         bgColor={taskBackgroundColor}
-        {...taskModalButtonProps}
+        {...taskViewModalButtonProps}
         data-test="test-card"
       >
         <Heading as="h3" variant="task-heading">
@@ -54,7 +54,7 @@ const Task = ({ id }: Props) => {
         } of ${allSubtasks?.length ?? 0} subtasks`}</Text>
       </Flex>
       {task && allSubtasks && (
-        <TaskModal
+        <TaskViewModal
           isOpen={isOpen}
           onClose={onClose}
           getDisclosureProps={getDisclosureProps}

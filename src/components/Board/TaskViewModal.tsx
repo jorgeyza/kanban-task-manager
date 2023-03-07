@@ -32,7 +32,7 @@ import { selectedBoardIdAtom } from "~/pages/_app";
 import { api, type RouterOutputs } from "~/utils/api";
 
 import type { ChakraModalProps, HTMLProps } from "~/types";
-import CreateOrEditTaskModal from "~/components/Header/CreateOrEditTaskModal";
+import CreateOrEditTaskModal from "~/components/CreateOrEditTaskModal";
 import { DynamicChakraModalAction } from "~/constants";
 import { updateTaskSchema } from "~/schema/task.schema";
 import { useEffect, useMemo } from "react";
@@ -47,7 +47,7 @@ interface Props extends ChakraModalProps {
   subtasks: Subtask[];
 }
 
-const TaskModal = ({
+const TaskViewModal = ({
   isOpen,
   onClose,
   getDisclosureProps,
@@ -247,4 +247,4 @@ const TaskModal = ({
   );
 };
 
-export default TaskModal;
+export default TaskViewModal;

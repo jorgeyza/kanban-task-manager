@@ -14,7 +14,7 @@ import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
 import { selectedBoardIdAtom } from "~/pages/_app";
 
-import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
+import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
 
 const AllBoards = () => {
   const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");

@@ -19,7 +19,7 @@ import { drawerAtom } from "~/pages/_app";
 import { selectedBoardIdAtom } from "~/pages/_app";
 
 import CreateOrEditTaskModal from "./CreateOrEditTaskModal";
-import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
+import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";

@@ -7,7 +7,7 @@ import {
 import { useAtom } from "jotai";
 
 import Column from "./Column";
-import CreateOrEditBoardModal from "../Sidebar/CreateOrEditBoardModal";
+import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
 
 import { selectedBoardIdAtom } from "~/pages/_app";
 import { type HTMLProps } from "~/types";
