@@ -20,9 +20,8 @@ import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type * as z from "zod";
 import { type ChangeEvent, type KeyboardEvent, useEffect } from "react";
-import { useAtom } from "jotai";
+import { useRouter } from "next/router";
 
-import { selectedBoardIdAtom } from "~/pages/_app";
 import { CrossIcon } from "~/assets";
 import { api } from "~/utils/api";
 import { updateBoardSchema } from "~/schema/board.schema";
@@ -48,6 +47,9 @@ const CreateOrEditBoardModal = ({
   action,
   board,
 }: DynamicChakraModalProps) => {
+  const router = useRouter();
+  const selectedBoardId = router.query.boardId as string;
+
   const backgroundColor = useColorModeValue("white", "darkerGray");
 
   const createOrEditBoardModalDisclosureProps = getDisclosureProps();
@@ -85,14 +87,12 @@ const CreateOrEditBoardModal = ({
     name: "columns",
   });
 
-  const [selectedBoardId, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
-
   const utils = api.useContext();
 
   const createBoard = api.board.create.useMutation({
     onSuccess({ id }) {
       void utils.board.getAll.invalidate();
-      setSelectedBoardId(id);
+      void router.push(id);
       onClose();
     },
   });

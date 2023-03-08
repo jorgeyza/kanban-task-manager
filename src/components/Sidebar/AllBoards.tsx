@@ -7,15 +7,12 @@ import {
   useDisclosure,
   Flex,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { BoardIcon } from "~/assets";
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
-import { selectedBoardIdAtom } from "~/pages/_app";
 
 import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
 import { ROUTE_BOARD_ID } from "~/constants";
@@ -30,15 +27,7 @@ const AllBoards = () => {
     useDisclosure();
   const createNewBoardButtonProps = getButtonProps() as HTMLProps;
 
-  const [, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
-
   const { data: allBoards } = api.board.getAll.useQuery();
-
-  useEffect(() => {
-    if (!routerQuery?.boardId && allBoards?.[0]) {
-      setSelectedBoardId(allBoards[0].id);
-    }
-  }, [allBoards, routerQuery?.boardId, setSelectedBoardId]);
   return (
     <div>
       <Heading mb={5} pl={6} variant="board-column-title">
@@ -70,7 +59,6 @@ const AllBoards = () => {
                   ? "customPurple.500"
                   : undefined
               }
-              onClick={() => setSelectedBoardId(board.id)}
             >
               <Flex
                 as={Link}

@@ -21,15 +21,14 @@ import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type ChangeEvent, type KeyboardEvent, useEffect } from "react";
 import { type z } from "zod";
-import { useAtom } from "jotai";
 
 import { CrossIcon } from "~/assets";
 
 import { type DynamicChakraModalProps } from "~/types";
 import { updateTaskSchema } from "~/schema/task.schema";
 import { api } from "~/utils/api";
-import { selectedBoardIdAtom } from "~/pages/_app";
 import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
+import { useRouter } from "next/router";
 
 const MODAL_HEADER = {
   [DYNAMIC_CHAKRA_MODAL_ACTION.CREATE]: "Add New Task",
@@ -51,15 +50,19 @@ const CreateOrEditTaskModal = ({
   task,
   subtasks,
 }: DynamicChakraModalProps) => {
+  const router = useRouter();
+  const selectedBoardId = router.query.boardId as string;
+
   const backgroundColor = useColorModeValue("white", "darkerGray");
 
   const createOrEditTaskModalDisclosureProps = getDisclosureProps();
 
-  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
-
-  const { data: selectedBoard } = api.board.getOne.useQuery({
-    id: selectedBoardId,
-  });
+  const { data: selectedBoard } = api.board.getOne.useQuery(
+    {
+      id: selectedBoardId,
+    },
+    { enabled: !!selectedBoardId }
+  );
 
   const utils = api.useContext();
   const createTask = api.task.create.useMutation({

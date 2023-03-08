@@ -21,13 +21,12 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { useAtom } from "jotai";
 import { type z } from "zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
 
 import { VerticalEllipsisIcon } from "~/assets";
-import { selectedBoardIdAtom } from "~/pages/_app";
 import { api, type RouterOutputs } from "~/utils/api";
 
 import type { ChakraModalProps, HTMLProps } from "~/types";
@@ -57,13 +56,14 @@ const TaskViewModal = ({
   task,
   subtasks,
 }: Props) => {
+  const router = useRouter();
+  const selectedBoardId = router.query.boardId as string;
+
   const taskBackgroundColor = useColorModeValue("white", "darkerGray");
   const checkboxBackgroundColor = useColorModeValue(
     "lighterGray",
     "lightBlack"
   );
-
-  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
 
   const createOrEditTaskModalButtonProps = createOrEditTaskModalGetButtonProps({
     onClick: handleEditTask,
@@ -72,9 +72,12 @@ const TaskViewModal = ({
   const taskViewModalDisclosureProps = getDisclosureProps();
 
   const utils = api.useContext();
-  const { data: selectedBoard } = api.board.getOne.useQuery({
-    id: selectedBoardId,
-  });
+  const { data: selectedBoard } = api.board.getOne.useQuery(
+    {
+      id: selectedBoardId,
+    },
+    { enabled: !!selectedBoardId }
+  );
   const deleteTask = api.task.delete.useMutation({
     onSuccess() {
       void utils.task.getAllByColumnId.invalidate({ columnId: task.columnId });

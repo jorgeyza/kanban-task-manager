@@ -4,17 +4,19 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useAtom } from "jotai";
+import { useRouter } from "next/router";
 
 import Column from "./Column";
 import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
 
-import { selectedBoardIdAtom } from "~/pages/_app";
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
 import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
 
 const Board = () => {
+  const router = useRouter();
+  const selectedBoardId = router.query.boardId as string;
+
   const newColumnBackgroundColor = useColorModeValue("lightGray", "darkerGray");
   const newColumnHoverBackgroundColor = useColorModeValue(
     "purpleAlpha25",
@@ -25,11 +27,12 @@ const Board = () => {
     useDisclosure();
   const createOrEditBoardButtonProps = getButtonProps() as HTMLProps;
 
-  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
-
-  const { data: selectedBoard } = api.board.getOne.useQuery({
-    id: selectedBoardId,
-  });
+  const { data: selectedBoard } = api.board.getOne.useQuery(
+    {
+      id: selectedBoardId,
+    },
+    { enabled: !!selectedBoardId }
+  );
 
   return (
     <Flex flexGrow={1} columnGap={6} overflow="auto" pb={8} data-test="board">

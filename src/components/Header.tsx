@@ -16,15 +16,18 @@ import { useAtom } from "jotai";
 
 import { Logo, VerticalEllipsisIcon } from "~/assets";
 import { drawerAtom } from "~/pages/_app";
-import { selectedBoardIdAtom } from "~/pages/_app";
 
 import CreateOrEditTaskModal from "./CreateOrEditTaskModal";
 import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 const Header = () => {
+  const router = useRouter();
+  const selectedBoardId = router.query.boardId as string;
+
   const borderColor = useColorModeValue("lightGray", "lightGrayAlpha25");
   const backgroundColor = useColorModeValue("white", "darkerGray");
   const headingColor = useColorModeValue("black", "white");
@@ -52,20 +55,25 @@ const Header = () => {
     createOrEditBoardModalGetButtonProps() as HTMLProps;
 
   const [isDrawerOpen] = useAtom(drawerAtom);
-  const [selectedBoardId, setSelectedBoardId] = useAtom(selectedBoardIdAtom);
 
   const utils = api.useContext();
 
-  const { data: selectedBoard } = api.board.getOne.useQuery({
-    id: selectedBoardId,
-  });
+  const { data: selectedBoard } = api.board.getOne.useQuery(
+    {
+      id: selectedBoardId,
+    },
+    { enabled: !!selectedBoardId }
+  );
 
   const { data: allBoards } = api.board.getAll.useQuery();
 
   const deleteBoard = api.board.delete.useMutation({
     onSuccess() {
       void utils.board.getAll.invalidate();
-      setSelectedBoardId(allBoards?.at(-2)?.id ?? "");
+
+      const previousAvailableBoard = allBoards?.at(-2)?.id;
+      if (!previousAvailableBoard) return router.replace("/");
+      return router.replace(`/${previousAvailableBoard}`);
     },
   });
 

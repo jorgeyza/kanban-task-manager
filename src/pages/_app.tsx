@@ -15,7 +15,6 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const drawerAtom = atom(true);
-export const selectedBoardIdAtom = atom("");
 export const selectedTaskIdAtom = atom("");
 
 const MyApp: AppType = ({ Component, pageProps }) => {
