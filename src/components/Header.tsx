@@ -14,6 +14,8 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 import { Logo, VerticalEllipsisIcon } from "~/assets";
 import { drawerAtom } from "~/pages/_app";
@@ -23,7 +25,6 @@ import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
-import { useRouter } from "next/router";
 
 const Header = () => {
   const router = useRouter();
@@ -100,12 +101,14 @@ const Header = () => {
         <Flex align="center" columnGap={6} h="100%">
           {!isDrawerOpen && (
             <Center
+              as={Link}
               h="100%"
               pr={6}
               pl={1}
               color={logoColor}
               borderColor={logoBorderColor}
               borderRight="1px solid"
+              href="/"
             >
               <Logo />
             </Center>

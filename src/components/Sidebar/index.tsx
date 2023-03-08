@@ -6,6 +6,7 @@ import { HideSidebarIcon, Logo } from "~/assets";
 import AllBoards from "./AllBoards";
 import ColorModeToggle from "./ColorModeToggle";
 import { drawerAtom } from "~/pages/_app";
+import Link from "next/link";
 
 const Sidebar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(drawerAtom);
@@ -34,9 +35,11 @@ const Sidebar = () => {
         bgColor={sidebarBackgroundColor}
         data-test="sidebar"
       >
-        <Box mb={54} px={6} color={LogoColor}>
-          <Logo />
-        </Box>
+        <Flex w="100%" mb={54} px={6}>
+          <Box as={Link} color={LogoColor} href="/">
+            <Logo />
+          </Box>
+        </Flex>
         <AllBoards />
         <ColorModeToggle />
         <HideSidebarButton onHideSidebar={handleCloseDrawer} />
