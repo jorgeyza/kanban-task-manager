@@ -112,11 +112,15 @@ const TaskViewModal = ({
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors, isSubmitSuccessful, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(updateTaskSchema),
     defaultValues,
   });
+
+  // Need to render everytime subtasks change, or counter (eg: Subtasks (0 of 3)) will get stuck at first render (eg: Subtasks (1 of 3))
+  const watchedSubtasks = watch("subtasks");
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     if (isDirty)
@@ -184,7 +188,7 @@ const TaskViewModal = ({
               >
                 <FormLabel htmlFor="subtask" variant="modal-subtitle">
                   {`Subtasks (${
-                    subtasks.filter((subtask) => subtask.isDone).length
+                    watchedSubtasks.filter((subtask) => subtask.isDone).length
                   } of ${subtasks.length})`}
                 </FormLabel>
 
