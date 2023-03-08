@@ -17,7 +17,6 @@ import {
   Select,
   Text,
   useColorModeValue,
-  useDisclosure,
   VStack,
   FormControl,
   FormLabel,
@@ -32,10 +31,8 @@ import { selectedBoardIdAtom } from "~/pages/_app";
 import { api, type RouterOutputs } from "~/utils/api";
 
 import type { ChakraModalProps, HTMLProps } from "~/types";
-import CreateOrEditTaskModal from "~/components/CreateOrEditTaskModal";
-import { DynamicChakraModalAction } from "~/constants";
 import { updateTaskSchema } from "~/schema/task.schema";
-import { useEffect, useMemo } from "react";
+import { type MouseEventHandler, useEffect, useMemo } from "react";
 
 type Task = RouterOutputs["task"]["getAllByColumnId"][0];
 type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
@@ -45,12 +42,18 @@ type FormData = z.infer<typeof updateTaskSchema>;
 interface Props extends ChakraModalProps {
   task: Task;
   subtasks: Subtask[];
+  createOrEditTaskModalGetButtonProps: ({
+    onClick,
+  }: {
+    onClick: MouseEventHandler<HTMLDivElement>;
+  }) => HTMLProps;
 }
 
 const TaskViewModal = ({
   isOpen,
   onClose,
   getDisclosureProps,
+  createOrEditTaskModalGetButtonProps,
   task,
   subtasks,
 }: Props) => {
@@ -60,19 +63,13 @@ const TaskViewModal = ({
     "lightBlack"
   );
 
-  const {
-    isOpen: createOrEditTaskModalIsOpen,
-    onClose: createOrEditTaskModalOnClose,
-    getButtonProps: createOrEditTaskModalGetButtonProps,
-    getDisclosureProps: createOrEditTaskModalGetDisclosureProps,
-  } = useDisclosure();
+  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
+
   const createOrEditTaskModalButtonProps = createOrEditTaskModalGetButtonProps({
     onClick: handleEditTask,
-  }) as HTMLProps;
+  });
 
-  const taskModalDisclosureProps = getDisclosureProps();
-
-  const [selectedBoardId] = useAtom(selectedBoardIdAtom);
+  const taskViewModalDisclosureProps = getDisclosureProps();
 
   const utils = api.useContext();
   const { data: selectedBoard } = api.board.getOne.useQuery({
@@ -151,7 +148,7 @@ const TaskViewModal = ({
         isOpen={isOpen}
         onClose={onClose}
         onCloseComplete={handleSubmit(onSubmit)}
-        {...taskModalDisclosureProps}
+        {...taskViewModalDisclosureProps}
         data-test="task-modal"
       >
         <ModalOverlay />
@@ -233,16 +230,6 @@ const TaskViewModal = ({
           </ModalBody>
         </ModalContent>
       </Modal>
-      {task && subtasks && createOrEditTaskModalIsOpen && (
-        <CreateOrEditTaskModal
-          isOpen={createOrEditTaskModalIsOpen}
-          onClose={createOrEditTaskModalOnClose}
-          getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-          action={DynamicChakraModalAction.EDIT}
-          task={task}
-          subtasks={subtasks}
-        />
-      )}
     </>
   );
 };

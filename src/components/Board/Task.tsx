@@ -1,27 +1,29 @@
-import {
-  Flex,
-  Heading,
-  Text,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-
-import TaskViewModal from "./TaskViewModal";
+import { Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
+import { selectedTaskIdAtom } from "~/pages/_app";
+import { type MouseEventHandler } from "react";
 
 interface Props {
   id: string;
+  getTaskViewModalButtonProps: ({
+    onClick,
+  }: {
+    onClick: MouseEventHandler<HTMLDivElement>;
+  }) => HTMLProps;
 }
 
-const Task = ({ id }: Props) => {
+const Task = ({ id, getTaskViewModalButtonProps }: Props) => {
   const taskBackgroundColor = useColorModeValue("white", "darkerGray");
   const taskHoverBackgroundColor = useColorModeValue("whiteSoft", "darkGray");
-  const { isOpen, onClose, getButtonProps, getDisclosureProps } =
-    useDisclosure();
 
-  const taskViewModalButtonProps = getButtonProps() as HTMLProps;
+  const [, setSelectedTaskId] = useAtom(selectedTaskIdAtom);
+
+  const taskViewModalButtonProps = getTaskViewModalButtonProps({
+    onClick: handleClickTask,
+  });
 
   const { data: task } = api.task.getOne.useQuery({
     id,
@@ -29,6 +31,10 @@ const Task = ({ id }: Props) => {
   const { data: allSubtasks } = api.subtask.getAllByTaskId.useQuery({
     taskId: id,
   });
+
+  function handleClickTask() {
+    setSelectedTaskId(id);
+  }
 
   return (
     <>
@@ -53,15 +59,6 @@ const Task = ({ id }: Props) => {
           allSubtasks?.filter((subtask) => subtask.isDone).length ?? 0
         } of ${allSubtasks?.length ?? 0} subtasks`}</Text>
       </Flex>
-      {task && allSubtasks && (
-        <TaskViewModal
-          isOpen={isOpen}
-          onClose={onClose}
-          getDisclosureProps={getDisclosureProps}
-          task={task}
-          subtasks={allSubtasks}
-        />
-      )}
     </>
   );
 };
