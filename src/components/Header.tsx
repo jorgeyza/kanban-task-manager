@@ -11,6 +11,7 @@ import {
   useDisclosure,
   Center,
   Tooltip,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
@@ -67,6 +68,9 @@ const Header = () => {
 
   const { data: allBoards } = api.board.getAll.useQuery();
 
+  const headingText =
+    router.pathname === "/" ? "Welcome!" : selectedBoard?.title;
+
   const deleteBoard = api.board.delete.useMutation({
     onSuccess() {
       void utils.board.getAll.invalidate();
@@ -107,45 +111,47 @@ const Header = () => {
             </Center>
           )}
           <Heading as="h1" color={headingColor} size="md">
-            {selectedBoard?.title}
+            {allBoards ? headingText : <Skeleton w="200px" h="40px" />}
           </Heading>
         </Flex>
-        <Flex align="center" columnGap={6}>
-          <Tooltip
-            aria-label="A tooltip"
-            label={
-              selectedBoard?.columns.length === 0 &&
-              "You have to create a column before adding tasks"
-            }
-          >
-            <Button
-              bgColor="customPurple.500"
-              isDisabled={selectedBoard?.columns.length === 0}
-              onClick={createOrEditTaskModalOnOpen}
-              size="lg"
-              variant="primary"
-              {...createOrEditTaskModalButtonProps}
+        {selectedBoardId && (
+          <Flex align="center" columnGap={6}>
+            <Tooltip
+              aria-label="A tooltip"
+              label={
+                selectedBoard?.columns.length === 0 &&
+                "You have to create a column before adding tasks"
+              }
             >
-              + Add New Task
-            </Button>
-          </Tooltip>
-          <Menu>
-            <MenuButton as={Box} cursor="pointer">
-              <VerticalEllipsisIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem
-                onClick={createOrEditBoardModalOnOpen}
-                {...createOrEditBoardModalButtonProps}
+              <Button
+                bgColor="customPurple.500"
+                isDisabled={selectedBoard?.columns.length === 0}
+                onClick={createOrEditTaskModalOnOpen}
+                size="lg"
+                variant="primary"
+                {...createOrEditTaskModalButtonProps}
               >
-                Edit Board
-              </MenuItem>
-              <MenuItem color="customRed" onClick={handleDeleteBoard}>
-                Delete Board
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
+                + Add New Task
+              </Button>
+            </Tooltip>
+            <Menu>
+              <MenuButton as={Box} cursor="pointer">
+                <VerticalEllipsisIcon />
+              </MenuButton>
+              <MenuList>
+                <MenuItem
+                  onClick={createOrEditBoardModalOnOpen}
+                  {...createOrEditBoardModalButtonProps}
+                >
+                  Edit Board
+                </MenuItem>
+                <MenuItem color="customRed" onClick={handleDeleteBoard}>
+                  Delete Board
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
+        )}
       </Flex>
       <CreateOrEditTaskModal
         isOpen={createOrEditTaskModalIsOpen}

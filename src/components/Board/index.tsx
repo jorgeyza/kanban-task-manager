@@ -1,6 +1,8 @@
 import {
   Center,
   Flex,
+  Heading,
+  Spinner,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -34,40 +36,60 @@ const Board = () => {
     { enabled: !!selectedBoardId }
   );
 
-  return (
-    <Flex flexGrow={1} columnGap={6} overflow="auto" pb={8} data-test="board">
-      {selectedBoard?.columns.map((columnData) => (
-        <Column
-          key={columnData.id}
-          id={columnData.id}
-          title={columnData.title}
-        />
-      ))}
-      <Center
-        as="button"
-        minW="280px"
-        h="90%"
-        mt="34px"
-        color="customPurple.500"
-        fontSize="24px"
-        fontWeight="bold"
-        borderRadius={8}
-        _hover={{ backgroundColor: newColumnHoverBackgroundColor }}
-        bgColor={newColumnBackgroundColor}
-        {...createOrEditBoardButtonProps}
-      >
-        + New Column
+  if (selectedBoardId) {
+    return (
+      <Flex flexGrow={1} columnGap={6} overflow="auto" pb={8} data-test="board">
+        {selectedBoard?.columns.map((columnData) => (
+          <Column
+            key={columnData.id}
+            id={columnData.id}
+            title={columnData.title}
+          />
+        ))}
+        {selectedBoardId && (
+          <Center
+            as="button"
+            minW="280px"
+            h="90%"
+            mt="34px"
+            color="customPurple.500"
+            fontSize="24px"
+            fontWeight="bold"
+            borderRadius={8}
+            _hover={{ backgroundColor: newColumnHoverBackgroundColor }}
+            bgColor={newColumnBackgroundColor}
+            {...createOrEditBoardButtonProps}
+          >
+            + New Column
+          </Center>
+        )}
+        {selectedBoard && isOpen && (
+          <CreateOrEditBoardModal
+            isOpen={isOpen}
+            onClose={onClose}
+            getDisclosureProps={getDisclosureProps}
+            action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
+            board={selectedBoard}
+          />
+        )}
+      </Flex>
+    );
+  }
+
+  if (router.pathname === "/") {
+    return (
+      <Center w="100%" h="100%">
+        <Heading maxW="50%" textAlign="center">
+          Select one of your boards to manage your tasks.
+        </Heading>
       </Center>
-      {selectedBoard && isOpen && (
-        <CreateOrEditBoardModal
-          isOpen={isOpen}
-          onClose={onClose}
-          getDisclosureProps={getDisclosureProps}
-          action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
-          board={selectedBoard}
-        />
-      )}
-    </Flex>
+    );
+  }
+
+  return (
+    <Center w="100%" h="100%">
+      <Spinner size="xl" />
+    </Center>
   );
 };
 
