@@ -1,5 +1,5 @@
 import type { UseModalProps } from "@chakra-ui/react";
-import { type DynamicChakraModalAction } from "./constants";
+import { type DYNAMIC_CHAKRA_MODAL_ACTION } from "./constants";
 import { type RouterOutputs } from "./utils/api";
 
 type ObjectValues<T> = T[keyof T];
@@ -13,14 +13,14 @@ export interface ChakraModalProps extends UseModalProps {
   getDisclosureProps: (props?: HTMLProps) => HTMLProps;
 }
 export interface DynamicChakraModalProps extends ChakraModalProps {
-  action: ObjectValues<typeof DynamicChakraModalAction>;
+  action: ObjectValues<typeof DYNAMIC_CHAKRA_MODAL_ACTION>;
   task?: Task;
   subtasks?: Subtask[];
   board?: Board;
 }
 
 // export interface DynamicChakraModalProps<
-//   Action extends keyof typeof DynamicChakraModalAction
+//   Action extends keyof typeof DYNAMIC_CHAKRA_MODAL_ACTION
 // > extends ChakraModalProps {
 //   action: Action;
 //   task: Action extends "EDIT" ? Task : undefined;

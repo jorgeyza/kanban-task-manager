@@ -27,16 +27,16 @@ import { CrossIcon } from "~/assets";
 import { api } from "~/utils/api";
 import { updateBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
-import { DynamicChakraModalAction } from "~/constants";
+import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
 
 const MODAL_HEADER = {
-  [DynamicChakraModalAction.CREATE]: "Create New Board",
-  [DynamicChakraModalAction.EDIT]: "Edit Board",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.CREATE]: "Create New Board",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.EDIT]: "Edit Board",
 };
 
 const SUBMIT_FORM_BUTTON = {
-  [DynamicChakraModalAction.CREATE]: "Create New Board",
-  [DynamicChakraModalAction.EDIT]: "Save Changes",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.CREATE]: "Create New Board",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.EDIT]: "Save Changes",
 };
 
 type FormData = z.infer<typeof updateBoardSchema>;
@@ -117,13 +117,13 @@ const CreateOrEditBoardModal = ({
     }));
 
     switch (action) {
-      case DynamicChakraModalAction.CREATE:
+      case DYNAMIC_CHAKRA_MODAL_ACTION.CREATE:
         return createBoard.mutate({
           title: data.title,
           columns: data.columns,
         });
 
-      case DynamicChakraModalAction.EDIT:
+      case DYNAMIC_CHAKRA_MODAL_ACTION.EDIT:
         return updateBoard.mutate({
           id: selectedBoardId,
           title: data.title,
@@ -242,7 +242,7 @@ const CreateOrEditBoardModal = ({
                       <Tooltip
                         aria-label="A tooltip"
                         label={
-                          action === DynamicChakraModalAction.EDIT &&
+                          action === DYNAMIC_CHAKRA_MODAL_ACTION.EDIT &&
                           getValues(`columns.${index}.id`)
                             ? "If you delete this column, all related tasks will be deleted"
                             : undefined

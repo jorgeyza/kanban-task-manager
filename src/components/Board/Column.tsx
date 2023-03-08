@@ -7,7 +7,7 @@ import CreateOrEditTaskModal from "../CreateOrEditTaskModal";
 
 import { api } from "~/utils/api";
 import { selectedTaskIdAtom } from "~/pages/_app";
-import { DynamicChakraModalAction } from "~/constants";
+import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
 
 interface Props {
   id: string;
@@ -78,7 +78,7 @@ const Column = ({ id, title }: Props) => {
           isOpen={createOrEditTaskModalIsOpen}
           onClose={createOrEditTaskModalOnClose}
           getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-          action={DynamicChakraModalAction.EDIT}
+          action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
           task={task}
           subtasks={allSubtasks}
         />

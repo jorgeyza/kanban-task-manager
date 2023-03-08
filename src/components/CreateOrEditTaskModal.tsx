@@ -29,16 +29,16 @@ import { type DynamicChakraModalProps } from "~/types";
 import { updateTaskSchema } from "~/schema/task.schema";
 import { api } from "~/utils/api";
 import { selectedBoardIdAtom } from "~/pages/_app";
-import { DynamicChakraModalAction } from "~/constants";
+import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
 
 const MODAL_HEADER = {
-  [DynamicChakraModalAction.CREATE]: "Add New Task",
-  [DynamicChakraModalAction.EDIT]: "Edit Task",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.CREATE]: "Add New Task",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.EDIT]: "Edit Task",
 } as const;
 
 const SUBMIT_FORM_BUTTON = {
-  [DynamicChakraModalAction.CREATE]: "Create Task",
-  [DynamicChakraModalAction.EDIT]: "Save Changes",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.CREATE]: "Create Task",
+  [DYNAMIC_CHAKRA_MODAL_ACTION.EDIT]: "Save Changes",
 } as const;
 
 type FormData = z.infer<typeof updateTaskSchema>;
@@ -134,7 +134,7 @@ const CreateOrEditTaskModal = ({
     }));
 
     switch (action) {
-      case DynamicChakraModalAction.CREATE:
+      case DYNAMIC_CHAKRA_MODAL_ACTION.CREATE:
         return createTask.mutate({
           title: data.title,
           description: data.description,
@@ -142,7 +142,7 @@ const CreateOrEditTaskModal = ({
           subtasks: data.subtasks,
         });
 
-      case DynamicChakraModalAction.EDIT:
+      case DYNAMIC_CHAKRA_MODAL_ACTION.EDIT:
         if (task)
           return updateTask.mutate({
             id: task.id,

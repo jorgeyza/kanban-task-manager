@@ -12,7 +12,7 @@ import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
 import { selectedBoardIdAtom } from "~/pages/_app";
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
-import { DynamicChakraModalAction } from "~/constants";
+import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
 
 const Board = () => {
   const newColumnBackgroundColor = useColorModeValue("lightGray", "darkerGray");
@@ -60,7 +60,7 @@ const Board = () => {
           isOpen={isOpen}
           onClose={onClose}
           getDisclosureProps={getDisclosureProps}
-          action={DynamicChakraModalAction.EDIT}
+          action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
           board={selectedBoard}
         />
       )}
