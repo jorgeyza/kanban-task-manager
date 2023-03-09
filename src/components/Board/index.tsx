@@ -49,7 +49,7 @@ const Board = () => {
             title={columnData.title}
           />
         ))}
-        {selectedBoardId && (
+        {selectedBoard && (
           <Center
             as="button"
             minW="280px"
