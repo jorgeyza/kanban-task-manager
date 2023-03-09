@@ -1,4 +1,5 @@
 import {
+  Button,
   Center,
   Flex,
   Heading,
@@ -35,6 +36,8 @@ const Board = () => {
     },
     { enabled: !!selectedBoardId }
   );
+
+  const { data: allBoards, isLoading } = api.board.getAll.useQuery();
 
   if (selectedBoardId) {
     return (
@@ -77,6 +80,28 @@ const Board = () => {
   }
 
   if (router.pathname === "/") {
+    if (!isLoading && allBoards?.length === 0) {
+      return (
+        <>
+          <Center flexDir="column" rowGap={8} w="100%" h="100%">
+            <Heading maxW="50%" textAlign="center">
+              Looks like you do not have an available board.
+            </Heading>
+            <Button size="lg" {...createOrEditBoardButtonProps}>
+              + Create New Board
+            </Button>
+          </Center>
+          {isOpen && (
+            <CreateOrEditBoardModal
+              isOpen={isOpen}
+              onClose={onClose}
+              getDisclosureProps={getDisclosureProps}
+              action={DYNAMIC_CHAKRA_MODAL_ACTION.CREATE}
+            />
+          )}
+        </>
+      );
+    }
     return (
       <Center w="100%" h="100%">
         <Heading maxW="50%" textAlign="center">
