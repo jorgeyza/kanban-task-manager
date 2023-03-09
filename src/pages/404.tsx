@@ -18,7 +18,7 @@ export default function Custom404() {
             viewBox="0 0 24 26"
             fill="none"
           >
-            <g clip-path="url(#clip0_3_38)">
+            <g clipPath="url(#clip0_3_38)">
               <path
                 d="M4 0.5H2C0.89543 0.5 0 1.39543 0 2.5V23.5C0 24.6046 0.89543 25.5 2 25.5H4C5.10457 25.5 6 24.6046 6 23.5V2.5C6 1.39543 5.10457 0.5 4 0.5Z"
                 fill="#635FC7"
