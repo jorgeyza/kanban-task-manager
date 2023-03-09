@@ -17,7 +17,7 @@ import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
 
 import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
-import { ROUTE_BOARD_ID } from "~/constants";
+import { DYNAMIC_CHAKRA_MODAL_ACTION, ROUTE_BOARD_ID } from "~/constants";
 
 const AllBoards = () => {
   const router = useRouter();
@@ -100,12 +100,14 @@ const AllBoards = () => {
             <Text variant="boards-list">+ Create New Board</Text>
           </ListItem>
         </List>
-        <CreateOrEditBoardModal
-          isOpen={isOpen}
-          onClose={onClose}
-          getDisclosureProps={getDisclosureProps}
-          action="CREATE"
-        />
+        {isOpen && (
+          <CreateOrEditBoardModal
+            isOpen={isOpen}
+            onClose={onClose}
+            getDisclosureProps={getDisclosureProps}
+            action={DYNAMIC_CHAKRA_MODAL_ACTION.CREATE}
+          />
+        )}
       </div>
     );
   }
