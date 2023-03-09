@@ -138,12 +138,16 @@ const CreateOrEditTaskModal = ({
 
     switch (action) {
       case DYNAMIC_CHAKRA_MODAL_ACTION.CREATE:
-        return createTask.mutate({
-          title: data.title,
-          description: data.description,
-          columnId: data.columnId,
-          subtasks: data.subtasks,
-        });
+        for (let i = 4; i < 31; i++) {
+          setTimeout(() => {
+            return createTask.mutate({
+              title: `${data.title}${i}`,
+              description: data.description,
+              columnId: data.columnId,
+              subtasks: data.subtasks,
+            });
+          }, 100);
+        }
 
       case DYNAMIC_CHAKRA_MODAL_ACTION.EDIT:
         if (task)

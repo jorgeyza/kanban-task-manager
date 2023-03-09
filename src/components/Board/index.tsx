@@ -41,7 +41,15 @@ const Board = () => {
 
   if (selectedBoardId) {
     return (
-      <Flex flexGrow={1} columnGap={6} overflow="auto" pb={8} data-test="board">
+      <Flex
+        flexGrow={1}
+        columnGap={6}
+        overflowX='auto'
+        maxW="full"
+        maxH="calc(100vh - 97px - 24px)"
+        pb={8}
+        data-test="board"
+      >
         {selectedBoard?.columns.map((columnData) => (
           <Column
             key={columnData.id}

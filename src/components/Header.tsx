@@ -25,6 +25,7 @@ import CreateOrEditBoardModal from "./CreateOrEditBoardModal";
 
 import { type HTMLProps } from "~/types";
 import { api } from "~/utils/api";
+import { ROUTE_BOARD_ID } from "~/constants";
 
 const Header = () => {
   const router = useRouter();
@@ -100,6 +101,7 @@ const Header = () => {
         borderBottomWidth="thin"
         borderBottomColor={borderColor}
         bgColor={backgroundColor}
+        shrink={0}
       >
         <Flex align="center" columnGap={6} h="100%">
           {!isDrawerOpen && (
@@ -120,7 +122,7 @@ const Header = () => {
             {allBoards ? headingText : <Skeleton w="200px" h="40px" />}
           </Heading>
         </Flex>
-        {selectedBoardId && (
+        {selectedBoard && (
           <Flex align="center" columnGap={6}>
             <Tooltip
               aria-label="A tooltip"

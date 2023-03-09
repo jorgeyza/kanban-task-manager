@@ -42,8 +42,8 @@ const Column = ({ id, title }: Props) => {
   });
 
   return (
-    <Flex direction="column" rowGap={5} w={280}>
-      <Flex columnGap={3}>
+    <Flex direction="column" rowGap={5}>
+      <Flex columnGap={3} data-test="column-header">
         <Box
           w="15px"
           h="15px"
@@ -54,35 +54,43 @@ const Column = ({ id, title }: Props) => {
           allTasks?.length ?? 0
         })`}</Heading>
       </Flex>
-      {allTasks?.map((task) => (
-        <Task
-          key={task.id}
-          id={task.id}
-          getTaskViewModalButtonProps={getTaskViewModalButtonProps}
-        />
-      ))}
-      {task && allSubtasks && (
-        <TaskViewModal
-          isOpen={taskViewModalIsOpen}
-          onClose={taskViewModalOnClose}
-          getDisclosureProps={taskViewModalGetDisclosureProps}
-          createOrEditTaskModalGetButtonProps={
-            createOrEditTaskModalGetButtonProps
-          }
-          task={task}
-          subtasks={allSubtasks}
-        />
-      )}
-      {task && allSubtasks && createOrEditTaskModalIsOpen && (
-        <CreateOrEditTaskModal
-          isOpen={createOrEditTaskModalIsOpen}
-          onClose={createOrEditTaskModalOnClose}
-          getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-          action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
-          task={task}
-          subtasks={allSubtasks}
-        />
-      )}
+      <Flex
+        direction="column"
+        rowGap={5}
+        overflowY="auto"
+        w={280}
+        data-test="column"
+      >
+        {allTasks?.map((task) => (
+          <Task
+            key={task.id}
+            id={task.id}
+            getTaskViewModalButtonProps={getTaskViewModalButtonProps}
+          />
+        ))}
+        {task && allSubtasks && (
+          <TaskViewModal
+            isOpen={taskViewModalIsOpen}
+            onClose={taskViewModalOnClose}
+            getDisclosureProps={taskViewModalGetDisclosureProps}
+            createOrEditTaskModalGetButtonProps={
+              createOrEditTaskModalGetButtonProps
+            }
+            task={task}
+            subtasks={allSubtasks}
+          />
+        )}
+        {task && allSubtasks && createOrEditTaskModalIsOpen && (
+          <CreateOrEditTaskModal
+            isOpen={createOrEditTaskModalIsOpen}
+            onClose={createOrEditTaskModalOnClose}
+            getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
+            action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
+            task={task}
+            subtasks={allSubtasks}
+          />
+        )}
+      </Flex>
     </Flex>
   );
 };

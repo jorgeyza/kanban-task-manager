@@ -42,7 +42,7 @@ const Task = ({ id, getTaskViewModalButtonProps }: Props) => {
         as="button"
         direction="column"
         rowGap={2}
-        w="280px"
+        w="264px"
         px={6}
         py={4}
         borderRadius={8}
