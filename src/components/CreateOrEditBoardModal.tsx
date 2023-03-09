@@ -26,7 +26,7 @@ import { CrossIcon } from "~/assets";
 import { api } from "~/utils/api";
 import { updateBoardSchema } from "~/schema/board.schema";
 import type { DynamicChakraModalProps } from "~/types";
-import { DYNAMIC_CHAKRA_MODAL_ACTION } from "~/constants";
+import { DYNAMIC_CHAKRA_MODAL_ACTION, ROUTE_BOARD_ID } from "~/constants";
 
 const MODAL_HEADER = {
   [DYNAMIC_CHAKRA_MODAL_ACTION.CREATE]: "Create New Board",
@@ -65,8 +65,10 @@ const CreateOrEditBoardModal = ({
         columnsIdsToDelete: [],
       }
     : {
+        id: "",
         title: "",
         columns: [{ id: "", title: "" }],
+        columnsIdsToDelete: [],
       };
 
   const {
@@ -92,8 +94,8 @@ const CreateOrEditBoardModal = ({
   const createBoard = api.board.create.useMutation({
     onSuccess({ id }) {
       void utils.board.getAll.invalidate();
-      void router.push(id);
       onClose();
+      void router.push({ pathname: ROUTE_BOARD_ID, query: id });
     },
   });
 
@@ -179,7 +181,7 @@ const CreateOrEditBoardModal = ({
 
   useEffect(() => {
     reset();
-  }, [isSubmitSuccessful, board, reset]);
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <Modal
