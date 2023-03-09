@@ -78,7 +78,10 @@ const Header = () => {
 
       const previousAvailableBoard = allBoards?.at(-2)?.id;
       if (!previousAvailableBoard) return router.replace("/");
-      return router.replace(`/${previousAvailableBoard}`);
+      return router.replace({
+        pathname: ROUTE_BOARD_ID,
+        query: previousAvailableBoard,
+      });
     },
   });
 
