@@ -20,6 +20,10 @@ export const updateTaskSchema = z.object({
   subtasksIdsToDelete: z.array(z.string()),
 });
 
-export const getAllTasksByColumnIdSchema = z.object({ columnId: z.string() });
+export const getInfiniteByColumnIdSchema = z.object({
+  columnId: z.string(),
+  limit: z.number().min(1).max(100).nullish(),
+  cursor: z.string().nullish(),
+});
 
 export const deleteTaskSchema = z.object({ id: z.string() });

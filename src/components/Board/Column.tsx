@@ -1,5 +1,15 @@
-import { Box, Flex, Heading, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Heading,
+  Skeleton,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useAtom } from "jotai";
+import { useInView } from "react-intersection-observer";
 
 import Task from "./Task";
 import TaskViewModal from "./TaskViewModal";
@@ -15,6 +25,8 @@ interface Props {
 }
 
 const Column = ({ id, title }: Props) => {
+  const { ref, inView } = useInView();
+
   const [selectedTaskId] = useAtom(selectedTaskIdAtom);
 
   const {
@@ -31,9 +43,21 @@ const Column = ({ id, title }: Props) => {
     getDisclosureProps: createOrEditTaskModalGetDisclosureProps,
   } = useDisclosure();
 
-  const { data: allTasks } = api.task.getAllByColumnId.useQuery({
-    columnId: id,
-  });
+  const {
+    data: allTasks,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    status,
+  } = api.task.getInfiniteByColumnId.useInfiniteQuery(
+    {
+      columnId: id,
+      limit: 10,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
   const { data: task } = api.task.getOne.useQuery({
     id: selectedTaskId,
   });
@@ -41,7 +65,19 @@ const Column = ({ id, title }: Props) => {
     taskId: selectedTaskId,
   });
 
-  return (
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView]);
+
+  return status === "loading" ? (
+    <Flex columnGap={3}>
+      <Skeleton w="280px" maxH="900px" />
+    </Flex>
+  ) : status === "error" ? (
+    <p>Error: {error.message}</p>
+  ) : (
     <Flex direction="column" rowGap={5}>
       <Flex columnGap={3} data-test="column-header">
         <Box
@@ -51,7 +87,7 @@ const Column = ({ id, title }: Props) => {
           bgColor={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
         />
         <Heading variant="board-column-title">{`${title} (${
-          allTasks?.length ?? 0
+          allTasks?.pages.length ?? 0
         })`}</Heading>
       </Flex>
       <Flex
@@ -61,13 +97,18 @@ const Column = ({ id, title }: Props) => {
         w={280}
         data-test="column"
       >
-        {allTasks?.map((task) => (
-          <Task
-            key={task.id}
-            id={task.id}
-            getTaskViewModalButtonProps={getTaskViewModalButtonProps}
-          />
-        ))}
+        {allTasks?.pages.map((page) => {
+          return page.tasks.map((task) => (
+            <Task
+              key={task.id}
+              id={task.id}
+              getTaskViewModalButtonProps={getTaskViewModalButtonProps}
+            />
+          ));
+        })}
+        <Center ref={ref} w="full" justifyContent="center">
+          {isFetchingNextPage ? <Spinner size="lg" /> : "Nothing more to load"}
+        </Center>
         {task && allSubtasks && (
           <TaskViewModal
             isOpen={taskViewModalIsOpen}

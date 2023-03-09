@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
   createTaskSchema,
   deleteTaskSchema,
-  getAllTasksByColumnIdSchema,
+  getInfiniteByColumnIdSchema,
   updateTaskSchema,
 } from "~/schema/task.schema";
 
@@ -22,12 +22,31 @@ export const taskRouter = createTRPCRouter({
     });
   }),
 
-  getAllByColumnId: publicProcedure
-    .input(getAllTasksByColumnIdSchema)
-    .query(({ ctx, input }) => {
-      return ctx.prisma.task.findMany({
-        where: { columnId: input.columnId },
+  getInfiniteByColumnId: publicProcedure
+    .input(getInfiniteByColumnIdSchema)
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 10;
+      const { cursor } = input;
+      const tasks = await ctx.prisma.task.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where: {
+          columnId: input.columnId,
+        },
+        orderBy: {
+          id: "asc",
+        },
       });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (tasks.length > limit) {
+        const nextTask = tasks.pop();
+        nextCursor = nextTask?.id;
+      }
+
+      return {
+        tasks,
+        nextCursor,
+      };
     }),
 
   getOne: publicProcedure.input(deleteTaskSchema).query(({ ctx, input }) => {
