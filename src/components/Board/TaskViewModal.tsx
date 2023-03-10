@@ -77,7 +77,9 @@ const TaskViewModal = ({
   );
   const deleteTask = api.task.delete.useMutation({
     onSuccess() {
-      void utils.task.getAllByColumnId.invalidate({ columnId: task.columnId });
+      void utils.task.getInfiniteByColumnId.invalidate({
+        columnId: task.columnId,
+      });
       onClose();
     },
   });
@@ -85,8 +87,10 @@ const TaskViewModal = ({
     onSuccess(data) {
       void utils.subtask.getAllByTaskId.invalidate({ taskId: task.id });
       void utils.task.getOne.invalidate({ id: task.id });
-      void utils.task.getAllByColumnId.invalidate({ columnId: task.columnId });
-      void utils.task.getAllByColumnId.invalidate({
+      void utils.task.getInfiniteByColumnId.invalidate({
+        columnId: task.columnId,
+      });
+      void utils.task.getInfiniteByColumnId.invalidate({
         columnId: data[0].columnId,
       });
     },

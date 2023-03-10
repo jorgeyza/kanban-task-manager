@@ -67,7 +67,9 @@ const CreateOrEditTaskModal = ({
   const utils = api.useContext();
   const createTask = api.task.create.useMutation({
     onSuccess(data) {
-      void utils.task.getAllByColumnId.invalidate({ columnId: data.columnId });
+      void utils.task.getInfiniteByColumnId.invalidate({
+        columnId: data.columnId,
+      });
       onClose();
     },
   });
@@ -75,8 +77,10 @@ const CreateOrEditTaskModal = ({
     onSuccess(data) {
       void utils.task.getOne.invalidate({ id: task?.id });
       void utils.subtask.getAllByTaskId.invalidate({ taskId: task?.id });
-      void utils.task.getAllByColumnId.invalidate({ columnId: task?.columnId });
-      void utils.task.getAllByColumnId.invalidate({
+      void utils.task.getInfiniteByColumnId.invalidate({
+        columnId: task?.columnId,
+      });
+      void utils.task.getInfiniteByColumnId.invalidate({
         columnId: data[0].columnId,
       });
       onClose();
