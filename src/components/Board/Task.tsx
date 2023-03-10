@@ -50,7 +50,7 @@ const Task = ({ id, getTaskViewModalButtonProps }: Props) => {
         cursor="pointer"
         bgColor={taskBackgroundColor}
         {...taskViewModalButtonProps}
-        data-test="test-card"
+        data-test="task-card"
       >
         <Heading as="h3" variant="task-heading">
           {task?.title}

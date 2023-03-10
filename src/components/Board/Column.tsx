@@ -124,7 +124,7 @@ const Column = ({ id, title }: Props) => {
           ref={parentRef}
           overflowY="auto"
           w={280}
-          data-test="virtualizer-container"
+          data-test="virtualizer-parent"
         >
           <Box
             sx={{
@@ -135,7 +135,7 @@ const Column = ({ id, title }: Props) => {
             h={`${
               taskVirtualizer.getTotalSize() + virtualTasks.length * 20 - 20
             }px`}
-            data-test="inner-virtualizer-container"
+            data-test="virtualizer-container"
           >
             <Flex
               pos="absolute"
@@ -145,7 +145,7 @@ const Column = ({ id, title }: Props) => {
               rowGap={5}
               w="100%"
               transform={`translateY(${virtualTasks?.[0]?.start as number}px)`}
-              data-test="task-container"
+              data-test="inner-virtualizer-container"
             >
               {virtualTasks.map((virtualTask) => {
                 const isLoaderTask = virtualTask.index > allTasks.length - 1;
@@ -157,6 +157,7 @@ const Column = ({ id, title }: Props) => {
                     key={task.id}
                     ref={taskVirtualizer.measureElement}
                     data-index={virtualTask.index}
+                    data-test="task-container"
                   >
                     {isLoaderTask ? (
                       hasNextPage ? (
