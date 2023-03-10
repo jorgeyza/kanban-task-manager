@@ -12,6 +12,7 @@ Web app for task management. Used PlanetScale for the database(MySQL-compatible)
 - Mark subtasks as complete and move tasks between columns
 - Hide/show the board sidebar
 - Toggle the theme between light/dark modes
+- Can efficiently load tasks thanks to infinite scroll and virtualization
 
 To start project use `pnpm dev`. You can see the [live application here](https://kanban-task-manager.jorgeyza.com)
 
