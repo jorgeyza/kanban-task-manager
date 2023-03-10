@@ -7,9 +7,9 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
-import { useInView } from "react-intersection-observer";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 import Task from "./Task";
 import TaskViewModal from "./TaskViewModal";
@@ -25,8 +25,6 @@ interface Props {
 }
 
 const Column = ({ id, title }: Props) => {
-  const { ref, inView } = useInView();
-
   const [selectedTaskId] = useAtom(selectedTaskIdAtom);
 
   const {
@@ -43,12 +41,19 @@ const Column = ({ id, title }: Props) => {
     getDisclosureProps: createOrEditTaskModalGetDisclosureProps,
   } = useDisclosure();
 
+  const { data: task } = api.task.getOne.useQuery({
+    id: selectedTaskId,
+  });
+  const { data: allSubtasks } = api.subtask.getAllByTaskId.useQuery({
+    taskId: selectedTaskId,
+  });
   const {
-    data: allTasks,
-    error,
-    fetchNextPage,
-    isFetchingNextPage,
+    data,
     status,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
   } = api.task.getInfiniteByColumnId.useInfiniteQuery(
     {
       columnId: id,
@@ -58,18 +63,42 @@ const Column = ({ id, title }: Props) => {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
-  const { data: task } = api.task.getOne.useQuery({
-    id: selectedTaskId,
-  });
-  const { data: allSubtasks } = api.subtask.getAllByTaskId.useQuery({
-    taskId: selectedTaskId,
+
+  const allTasks = data ? data.pages.flatMap((page) => page.tasks) : [];
+
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const taskVirtualizer = useVirtualizer({
+    count: hasNextPage ? allTasks.length + 1 : allTasks.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 77.5 + 20,
+    overscan: 5,
   });
 
+  const virtualTasks = taskVirtualizer.getVirtualItems();
+
   useEffect(() => {
-    if (inView) {
-      fetchNextPage();
+    const [lastItem] = [...taskVirtualizer.getVirtualItems()].reverse();
+
+    if (!lastItem) {
+      return;
     }
-  }, [inView]);
+
+    if (
+      lastItem.index >= allTasks.length - 1 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      void fetchNextPage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    hasNextPage,
+    fetchNextPage,
+    allTasks.length,
+    isFetchingNextPage,
+    taskVirtualizer.getVirtualItems(),
+  ]);
 
   return status === "loading" ? (
     <Flex columnGap={3}>
@@ -78,61 +107,103 @@ const Column = ({ id, title }: Props) => {
   ) : status === "error" ? (
     <p>Error: {error.message}</p>
   ) : (
-    <Flex direction="column" rowGap={5}>
-      <Flex columnGap={3} data-test="column-header">
+    <>
+      <Flex direction="column" rowGap={5} data-test="column">
+        <Flex columnGap={3} data-test="column-header">
+          <Box
+            w="15px"
+            h="15px"
+            borderRadius="50%"
+            bgColor={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+          />
+          <Heading variant="board-column-title">{`${title} (${
+            allTasks?.length ?? 0
+          })`}</Heading>
+        </Flex>
         <Box
-          w="15px"
-          h="15px"
-          borderRadius="50%"
-          bgColor={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+          ref={parentRef}
+          overflowY="auto"
+          w={280}
+          data-test="virtualizer-container"
+        >
+          <Box
+            sx={{
+              contain: "strict",
+            }}
+            pos="relative"
+            w="100%"
+            h={`${
+              taskVirtualizer.getTotalSize() + virtualTasks.length * 20 - 20
+            }px`}
+            data-test="inner-virtualizer-container"
+          >
+            <Flex
+              pos="absolute"
+              top={0}
+              left={0}
+              direction="column"
+              rowGap={5}
+              w="100%"
+              transform={`translateY(${virtualTasks?.[0]?.start as number}px)`}
+              data-test="task-container"
+            >
+              {virtualTasks.map((virtualTask) => {
+                const isLoaderTask = virtualTask.index > allTasks.length - 1;
+                const task = allTasks[virtualTask.index];
+                if (!task) return;
+
+                return (
+                  <Box
+                    key={task.id}
+                    ref={taskVirtualizer.measureElement}
+                    data-index={virtualTask.index}
+                  >
+                    {isLoaderTask ? (
+                      hasNextPage ? (
+                        <Center justifyContent="center" w="full">
+                          <Spinner size="lg" />
+                        </Center>
+                      ) : (
+                        "Nothing more to load"
+                      )
+                    ) : (
+                      <Task
+                        id={task?.id}
+                        getTaskViewModalButtonProps={
+                          getTaskViewModalButtonProps
+                        }
+                      />
+                    )}
+                  </Box>
+                );
+              })}
+            </Flex>
+          </Box>
+        </Box>
+      </Flex>
+      {task && allSubtasks && (
+        <TaskViewModal
+          isOpen={taskViewModalIsOpen}
+          onClose={taskViewModalOnClose}
+          getDisclosureProps={taskViewModalGetDisclosureProps}
+          createOrEditTaskModalGetButtonProps={
+            createOrEditTaskModalGetButtonProps
+          }
+          task={task}
+          subtasks={allSubtasks}
         />
-        <Heading variant="board-column-title">{`${title} (${
-          allTasks?.pages.length ?? 0
-        })`}</Heading>
-      </Flex>
-      <Flex
-        direction="column"
-        rowGap={5}
-        overflowY="auto"
-        w={280}
-        data-test="column"
-      >
-        {allTasks?.pages.map((page) => {
-          return page.tasks.map((task) => (
-            <Task
-              key={task.id}
-              id={task.id}
-              getTaskViewModalButtonProps={getTaskViewModalButtonProps}
-            />
-          ));
-        })}
-        <Center ref={ref} w="full" justifyContent="center">
-          {isFetchingNextPage ? <Spinner size="lg" /> : "Nothing more to load"}
-        </Center>
-        {task && allSubtasks && (
-          <TaskViewModal
-            isOpen={taskViewModalIsOpen}
-            onClose={taskViewModalOnClose}
-            getDisclosureProps={taskViewModalGetDisclosureProps}
-            createOrEditTaskModalGetButtonProps={
-              createOrEditTaskModalGetButtonProps
-            }
-            task={task}
-            subtasks={allSubtasks}
-          />
-        )}
-        {task && allSubtasks && createOrEditTaskModalIsOpen && (
-          <CreateOrEditTaskModal
-            isOpen={createOrEditTaskModalIsOpen}
-            onClose={createOrEditTaskModalOnClose}
-            getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
-            action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
-            task={task}
-            subtasks={allSubtasks}
-          />
-        )}
-      </Flex>
-    </Flex>
+      )}
+      {task && allSubtasks && createOrEditTaskModalIsOpen && (
+        <CreateOrEditTaskModal
+          isOpen={createOrEditTaskModalIsOpen}
+          onClose={createOrEditTaskModalOnClose}
+          getDisclosureProps={createOrEditTaskModalGetDisclosureProps}
+          action={DYNAMIC_CHAKRA_MODAL_ACTION.EDIT}
+          task={task}
+          subtasks={allSubtasks}
+        />
+      )}
+    </>
   );
 };
 
