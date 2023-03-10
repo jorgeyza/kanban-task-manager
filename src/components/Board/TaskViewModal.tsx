@@ -27,14 +27,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 
 import { VerticalEllipsisIcon } from "~/assets";
-import { api, type RouterOutputs } from "~/utils/api";
+import { api } from "~/utils/api";
 
-import type { ChakraModalProps, HTMLProps } from "~/types";
+import type { ChakraModalProps, HTMLProps, Subtask, Task } from "~/types";
 import { updateTaskSchema } from "~/schema/task.schema";
 import { type MouseEventHandler, useEffect, useMemo } from "react";
-
-type Task = RouterOutputs["task"]["getAllByColumnId"][0];
-type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
 
 type FormData = z.infer<typeof updateTaskSchema>;
 

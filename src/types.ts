@@ -5,8 +5,8 @@ import { type RouterOutputs } from "./utils/api";
 type ObjectValues<T> = T[keyof T];
 
 type Board = RouterOutputs["board"]["getOne"];
-type Task = RouterOutputs["task"]["getAllByColumnId"][0];
-type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
+export type Task = RouterOutputs["task"]["getInfiniteByColumnId"]["tasks"][0];
+export type Subtask = RouterOutputs["subtask"]["getAllByTaskId"][0];
 
 export type HTMLProps = React.HTMLAttributes<HTMLElement>;
 export interface ChakraModalProps extends UseModalProps {
