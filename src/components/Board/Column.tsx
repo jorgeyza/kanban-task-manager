@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Center,
@@ -91,7 +92,6 @@ const Column = ({ id, title }: Props) => {
     ) {
       void fetchNextPage();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     hasNextPage,
     fetchNextPage,
