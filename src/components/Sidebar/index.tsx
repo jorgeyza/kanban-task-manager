@@ -26,7 +26,7 @@ const Sidebar = () => {
         direction="column"
         overflow="hidden"
         w={0}
-        minW={isDrawerOpen ? 300 : 0}
+        minW={{ base: isDrawerOpen ? "100vw" : 0, sm: isDrawerOpen ? 300 : 0 }}
         h="100vh"
         py={8}
         borderColor={sidebarBorderColor}

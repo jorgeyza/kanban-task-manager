@@ -44,7 +44,7 @@ const Board = () => {
       <Flex
         flexGrow={1}
         columnGap={6}
-        overflowX='auto'
+        overflowX="auto"
         maxW="full"
         maxH="calc(100vh - 97px - 24px)"
         pb={8}
@@ -111,8 +111,8 @@ const Board = () => {
       );
     }
     return (
-      <Center w="100%" h="100%">
-        <Heading maxW="50%" textAlign="center">
+      <Center w="100%" h="100%" data-test="board-not-selected">
+        <Heading maxW={{ base: "100%", md: "50%" }} textAlign="center">
           Select one of your boards to manage your tasks.
         </Heading>
       </Center>

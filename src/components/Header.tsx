@@ -17,7 +17,7 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import { Logo, VerticalEllipsisIcon } from "~/assets";
+import { Logo, LogoMobile, VerticalEllipsisIcon } from "~/assets";
 import { drawerAtom } from "~/pages/_app";
 
 import CreateOrEditTaskModal from "./CreateOrEditTaskModal";
@@ -101,6 +101,7 @@ const Header = () => {
         borderBottomWidth="thin"
         borderBottomColor={borderColor}
         bgColor={backgroundColor}
+        data-test="header"
         shrink={0}
       >
         <Flex align="center" columnGap={6} h="100%">
@@ -113,12 +114,18 @@ const Header = () => {
               color={logoColor}
               borderColor={logoBorderColor}
               borderRight="1px solid"
+              data-test="logo"
               href="/"
             >
-              <Logo />
+              <Box display={{ base: "none", md: "block" }}>
+                <Logo />
+              </Box>
+              <Box display={{ base: "block", md: "none" }} w="30px">
+                <LogoMobile />
+              </Box>
             </Center>
           )}
-          <Heading as="h1" color={headingColor} size="md">
+          <Heading as="h1" mr={4} color={headingColor} size="md">
             {allBoards ? headingText : <Skeleton w="200px" h="40px" />}
           </Heading>
         </Flex>
@@ -135,7 +142,7 @@ const Header = () => {
                 bgColor="customPurple.500"
                 isDisabled={selectedBoard?.columns.length === 0}
                 onClick={createOrEditTaskModalOnOpen}
-                size="lg"
+                size={{ base: "md", md: "lg" }}
                 variant="primary"
                 {...createOrEditTaskModalButtonProps}
               >

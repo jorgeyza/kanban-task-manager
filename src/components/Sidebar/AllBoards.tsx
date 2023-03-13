@@ -8,9 +8,11 @@ import {
   Flex,
   Stack,
   Skeleton,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAtom } from "jotai";
 
 import { BoardIcon } from "~/assets";
 import { type HTMLProps } from "~/types";
@@ -18,10 +20,15 @@ import { api } from "~/utils/api";
 
 import CreateOrEditBoardModal from "../CreateOrEditBoardModal";
 import { DYNAMIC_CHAKRA_MODAL_ACTION, ROUTE_BOARD_ID } from "~/constants";
+import { drawerAtom } from "~/pages/_app";
 
 const AllBoards = () => {
   const router = useRouter();
   const routerQuery = router.query;
+
+  const [, setIsDrawerOpen] = useAtom(drawerAtom);
+
+  const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
 
   const hoverBackgroundColor = useColorModeValue("purpleAlpha25", "white");
 
@@ -30,6 +37,10 @@ const AllBoards = () => {
   const createNewBoardButtonProps = getButtonProps() as HTMLProps;
 
   const { data: allBoards } = api.board.getAll.useQuery();
+
+  function handleMobileClick() {
+    setIsDrawerOpen(false);
+  }
 
   if (allBoards) {
     return (
@@ -63,6 +74,7 @@ const AllBoards = () => {
                     ? "customPurple.500"
                     : undefined
                 }
+                onClick={isLargerThan480 ? undefined : handleMobileClick}
               >
                 <Flex
                   as={Link}

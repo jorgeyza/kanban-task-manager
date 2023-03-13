@@ -1,4 +1,6 @@
 import { Flex } from "@chakra-ui/react";
+import { useAtom } from "jotai";
+import { drawerAtom } from "~/pages/_app";
 
 import Sidebar from "~/components/Sidebar";
 import Header from "~/components/Header";
@@ -10,6 +12,7 @@ const Layout = ({
   children: React.ReactNode;
   className: string;
 }) => {
+  const [isDrawerOpen] = useAtom(drawerAtom);
   return (
     <Flex className={className} overflow="hidden" data-test="app-layout">
       <Sidebar />
@@ -21,7 +24,7 @@ const Layout = ({
           direction="column"
           flexGrow={1}
           rowGap={4}
-          maxW="calc(100vw - 300px)"
+          maxW={isDrawerOpen ? "calc(100vw - 300px)" : "100vw"}
           maxH="calc(100vh - 97px)"
           p={6}
           data-test="main-container"
