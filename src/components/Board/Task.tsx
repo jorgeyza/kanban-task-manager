@@ -43,6 +43,7 @@ const Task = ({ id, getTaskViewModalButtonProps }: Props) => {
         direction="column"
         rowGap={2}
         w="264px"
+        h="100px"
         px={6}
         py={4}
         borderRadius={8}
@@ -52,7 +53,7 @@ const Task = ({ id, getTaskViewModalButtonProps }: Props) => {
         {...taskViewModalButtonProps}
         data-test="task-card"
       >
-        <Heading as="h3" variant="task-heading">
+        <Heading as="h3" noOfLines={2} variant="task-heading">
           {task?.title}
         </Heading>
         <Text variant="basic-text">{`${

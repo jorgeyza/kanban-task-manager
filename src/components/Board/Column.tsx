@@ -72,7 +72,7 @@ const Column = ({ id, title }: Props) => {
   const taskVirtualizer = useVirtualizer({
     count: hasNextPage ? allTasks.length + 1 : allTasks.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 77.5 + 20,
+    estimateSize: () => 120,
     overscan: 5,
   });
 
@@ -132,53 +132,43 @@ const Column = ({ id, title }: Props) => {
             }}
             pos="relative"
             w="100%"
-            h={`${
-              taskVirtualizer.getTotalSize() + virtualTasks.length * 20 - 20
-            }px`}
+            h={`${taskVirtualizer.getTotalSize()}px`}
             data-test="virtualizer-container"
           >
-            <Flex
-              pos="absolute"
-              top={0}
-              left={0}
-              direction="column"
-              rowGap={5}
-              w="100%"
-              transform={`translateY(${virtualTasks?.[0]?.start as number}px)`}
-              data-test="inner-virtualizer-container"
-            >
-              {virtualTasks.map((virtualTask) => {
-                const isLoaderTask = virtualTask.index > allTasks.length - 1;
-                const task = allTasks[virtualTask.index];
-                if (!task) return;
+            {virtualTasks.map((virtualTask) => {
+              const isLoaderTask = virtualTask.index > allTasks.length - 1;
+              const task = allTasks[virtualTask.index];
+              if (!task) return;
 
-                return (
-                  <Box
-                    key={task.id}
-                    ref={taskVirtualizer.measureElement}
-                    data-index={virtualTask.index}
-                    data-test="task-container"
-                  >
-                    {isLoaderTask ? (
-                      hasNextPage ? (
-                        <Center justifyContent="center" w="full">
-                          <Spinner size="lg" />
-                        </Center>
-                      ) : (
-                        "Nothing more to load"
-                      )
+              return (
+                <Box
+                  key={task.id}
+                  pos="absolute"
+                  top={0}
+                  left={0}
+                  w="100%"
+                  h={`${virtualTask.size}px`}
+                  mb={5}
+                  transform={`translateY(${virtualTask.start}px)`}
+                  data-test="inner-virtualizer-container"
+                >
+                  {isLoaderTask ? (
+                    hasNextPage ? (
+                      <Center justifyContent="center" w="full">
+                        <Spinner size="lg" />
+                      </Center>
                     ) : (
-                      <Task
-                        id={task?.id}
-                        getTaskViewModalButtonProps={
-                          getTaskViewModalButtonProps
-                        }
-                      />
-                    )}
-                  </Box>
-                );
-              })}
-            </Flex>
+                      "Nothing more to load"
+                    )
+                  ) : (
+                    <Task
+                      id={task?.id}
+                      getTaskViewModalButtonProps={getTaskViewModalButtonProps}
+                    />
+                  )}
+                </Box>
+              );
+            })}
           </Box>
         </Box>
       </Flex>
