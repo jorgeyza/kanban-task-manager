@@ -65,6 +65,354 @@
                   "isDone": false
                 }
               ]
+            },
+            {
+              "title": "Design logo and branding guidelines",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Create several logo design concepts",
+                  "isDone": false
+                },
+                {
+                  "title": "Refine selected logo design",
+                  "isDone": false
+                },
+                {
+                  "title": "Create brand color scheme",
+                  "isDone": false
+                },
+                {
+                  "title": "Define typography guidelines",
+                  "isDone": false
+                },
+                {
+                  "title": "Create brand guidelines document",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Create landing page for platform",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Define key messaging and USPs",
+                  "isDone": false
+                },
+                {
+                  "title": "Design layout and wireframe",
+                  "isDone": false
+                },
+                {
+                  "title": "Write copy for landing page",
+                  "isDone": false
+                },
+                {
+                  "title": "Develop landing page",
+                  "isDone": false
+                },
+                {
+                  "title": "Test landing page for usability",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Add support for multiple languages",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Define languages to support",
+                  "isDone": false
+                },
+                {
+                  "title": "Add language switcher to UI",
+                  "isDone": false
+                },
+                {
+                  "title": "Translate all UI text",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Create onboarding emails",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Define key messages for onboarding",
+                  "isDone": false
+                },
+                {
+                  "title": "Write onboarding email copy",
+                  "isDone": false
+                },
+                {
+                  "title": "Design email templates",
+                  "isDone": false
+                },
+                {
+                  "title": "Set up email delivery system",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Create user documentation",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Define user documentation structure",
+                  "isDone": false
+                },
+                {
+                  "title": "Write user documentation",
+                  "isDone": false
+                },
+                {
+                  "title": "Design user documentation templates",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Develop mobile app",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Define mobile app features",
+                  "isDone": false
+                },
+                {
+                  "title": "Design mobile app layout and wireframe",
+                  "isDone": false
+                },
+                {
+                  "title": "Develop mobile app",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Plan vacation",
+              "description": "Plan a vacation to Hawaii for next summer",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Research flights to Hawaii",
+                  "isDone": false
+                },
+                {
+                  "title": "Book hotel reservations",
+                  "isDone": false
+                },
+                {
+                  "title": "Create itinerary for trip",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Organize closet",
+              "description": "Sort through clothes and reorganize closet",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Take all clothes out of closet",
+                  "isDone": false
+                },
+                {
+                  "title": "Sort clothes into keep, donate, and sell piles",
+                  "isDone": false
+                },
+                {
+                  "title": "Reorganize closet and put clothes back in",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Create blog post",
+              "description": "Write a blog post about the benefits of meditation",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Research benefits of meditation",
+                  "isDone": false
+                },
+                {
+                  "title": "Write rough draft of blog post",
+                  "isDone": false
+                },
+                {
+                  "title": "Revise and edit blog post",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Plan birthday party",
+              "description": "Plan a surprise birthday party for a friend",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Create guest list and send out invitations",
+                  "isDone": false
+                },
+                {
+                  "title": "Plan party decorations and theme",
+                  "isDone": false
+                },
+                {
+                  "title": "Organize food and drinks for party",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Learn new language",
+              "description": "Learn to speak French",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Enroll in online French course",
+                  "isDone": false
+                },
+                {
+                  "title": "Practice speaking French with native speakers",
+                  "isDone": false
+                },
+                {
+                  "title": "Study French grammar and vocabulary",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Plan vacation to Hawaii",
+              "description": "Family vacation to Hawaii in Summer 2023",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Research best time to visit Hawaii",
+                  "isDone": true
+                },
+                {
+                  "title": "Find flights to Hawaii",
+                  "isDone": false
+                },
+                {
+                  "title": "Book hotel in Hawaii",
+                  "isDone": false
+                },
+                {
+                  "title": "Create itinerary for Hawaii trip",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Write a novel",
+              "description": "",
+              "column": "In Progress",
+              "subtasks": [
+                {
+                  "title": "Develop plot outline",
+                  "isDone": true
+                },
+                {
+                  "title": "Create character profiles",
+                  "isDone": true
+                },
+                {
+                  "title": "Write first draft of novel",
+                  "isDone": false
+                },
+                {
+                  "title": "Revise and edit novel",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Learn to play the guitar",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Buy a guitar",
+                  "isDone": true
+                },
+                {
+                  "title": "Take beginner guitar lessons",
+                  "isDone": true
+                },
+                {
+                  "title": "Practice playing guitar for 1 hour each day",
+                  "isDone": false
+                },
+                {
+                  "title": "Learn how to play 5 new songs on guitar",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Plan a surprise birthday party",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Choose a theme for the party",
+                  "isDone": true
+                },
+                {
+                  "title": "Create guest list and send invitations",
+                  "isDone": false
+                },
+                {
+                  "title": "Order decorations and supplies for the party",
+                  "isDone": false
+                },
+                {
+                  "title": "Plan menu for the party",
+                  "isDone": false
+                },
+                {
+                  "title": "Organize games and activities for the party",
+                  "isDone": false
+                }
+              ]
+            },
+            {
+              "title": "Prepare for a job interview",
+              "description": "",
+              "column": "Todo",
+              "subtasks": [
+                {
+                  "title": "Research the company and its culture",
+                  "isDone": true
+                },
+                {
+                  "title": "Practice answering common interview questions",
+                  "isDone": true
+                },
+                {
+                  "title": "Choose appropriate interview attire",
+                  "isDone": false
+                },
+                {
+                  "title": "Prepare a list of questions to ask the interviewer",
+                  "isDone": false
+                }
+              ]
             }
           ]
         },
