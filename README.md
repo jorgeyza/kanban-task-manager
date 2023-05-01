@@ -27,6 +27,7 @@ To start project use `pnpm dev`. You can see the [live application here](https:/
 - [ChakraUI](https://chakra-ui.com/)
 - [tRPC](https://trpc.io)
 - [PlanetScale](https://planetscale.com/)
+- [TanStack Virtual](https://tanstack.com/virtual/v3)
 
 ## Diagram
 
