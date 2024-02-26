@@ -18,7 +18,8 @@ To start project use `pnpm dev`. You can see the [live application here](https:/
 
 ## Envs
 
-- DATABASE_URL => A Supabase database url.
+- DATABASE_URL => A Supabase connection URL including authentication info.
+- DIRECT_URL => A Supabase connection URL for direct connection to the database. Needed for connection pooler.
 
 ## Stack
 
