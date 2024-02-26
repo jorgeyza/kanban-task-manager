@@ -4,7 +4,7 @@
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`. UI design by [Frontend Mentor](https://www.frontendmentor.io/)
 
-Web app for task management. Used PlanetScale for the database(MySQL-compatible). Users are able to:
+Web app for task management. Used Supabase for the database(PostgreSQL). Users are able to:
 
 - See hover states for all interactive elements on the page
 - Create, read, update, and delete boards and tasks
@@ -18,7 +18,7 @@ To start project use `pnpm dev`. You can see the [live application here](https:/
 
 ## Envs
 
-- DATABASE_URL => A PlanetScale database url.
+- DATABASE_URL => A Supabase database url.
 
 ## Stack
 
@@ -26,7 +26,7 @@ To start project use `pnpm dev`. You can see the [live application here](https:/
 - [Prisma](https://prisma.io)
 - [ChakraUI](https://chakra-ui.com/)
 - [tRPC](https://trpc.io)
-- [PlanetScale](https://planetscale.com/)
+- [Supabase](https://supabase.com/)
 - [TanStack Virtual](https://tanstack.com/virtual/v3)
 
 ## Diagram
